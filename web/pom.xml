@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.lmxdawn</groupId>
-            <artifactId>dao</artifactId>
+            <artifactId>service</artifactId>
             <version>${parent.version}</version>
         </dependency>
     </dependencies>
