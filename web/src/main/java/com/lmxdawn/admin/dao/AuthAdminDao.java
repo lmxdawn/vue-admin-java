@@ -1,9 +1,11 @@
 package com.lmxdawn.admin.dao;
 
 import com.lmxdawn.admin.entity.AuthAdmin;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+@Mapper
 public interface AuthAdminDao {
     
     /**
