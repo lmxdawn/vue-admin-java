@@ -16,7 +16,7 @@ public class HelloController {
 
     @GetMapping("/hello")
     public List<AuthAdmin> hello() {
-        List<AuthAdmin> authAdminList = authAdminService.queryList();
+        List<AuthAdmin> authAdminList = authAdminService.findByPage(null, 1, 10);
         System.out.println(authAdminList);
         return authAdminList;
     }

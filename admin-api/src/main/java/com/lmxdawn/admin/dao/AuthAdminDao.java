@@ -3,7 +3,9 @@ package com.lmxdawn.admin.dao;
 import com.lmxdawn.admin.entity.AuthAdmin;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface AuthAdminDao {
@@ -12,34 +14,34 @@ public interface AuthAdminDao {
      * 查询列表
      * @return 列表
      */
-    List<AuthAdmin> queryAuthAdmin();
+    List<AuthAdmin> findByPage(Map<String,Object> map);
     
     /**
      * 根据id查询
      * @param id 传入的id
      * @return
      */
-    AuthAdmin queryAuthAdminById(Long id);
+    AuthAdmin findById(Long id);
     
     /**
      * 插入
      * @param authAdmin
      * @return
      */
-    int insertAuthAdmin(AuthAdmin authAdmin);
+    boolean insert(AuthAdmin authAdmin);
     
     /**
      * 更新
      * @param authAdmin
      * @return
      */
-    int updateAuthAdmin(AuthAdmin authAdmin);
+    boolean update(AuthAdmin authAdmin);
     
     /**
      * 删除
      * @param id
      * @return
      */
-    int deleteAuthAdminById(Long id);
+    boolean delete(Long id);
     
 }

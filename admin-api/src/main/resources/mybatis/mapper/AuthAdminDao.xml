@@ -3,11 +3,17 @@
 
 <mapper namespace="com.lmxdawn.admin.dao.AuthAdminDao" >
 
-    <select id="queryAuthAdmin" resultType="com.lmxdawn.admin.entity.AuthAdmin">
+    <select id="findByPage" parameterType="hashmap" resultType="com.lmxdawn.admin.entity.AuthAdmin">
         SELECT id,username
         FROM auth_admin
+        <where>
+            <if test="username != null and '' != username">
+                username = #{username}
+            </if>
+        </where>
         ORDER BY id
         DESC
+        LIMIT #{currIndex} , #{pageSize}
     </select>
 
 </mapper>

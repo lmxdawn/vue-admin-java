@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface AuthAdminService {
 
-    List<AuthAdmin> queryList();
-
+    List<AuthAdmin> findByPage(String username, Integer currPage, Integer pageSize);
+    
 }
