@@ -7,8 +7,6 @@
     <artifactId>admin</artifactId>
     <version>0.0.1</version>
     <modules>
-        <module>entity</module>
-        <module>web</module>
     </modules>
     <packaging>pom</packaging>
 
