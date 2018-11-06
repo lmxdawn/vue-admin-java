@@ -7,6 +7,7 @@
     <artifactId>admin</artifactId>
     <version>0.0.1</version>
     <modules>
+        <module>admin-api</module>
     </modules>
     <packaging>pom</packaging>
 
