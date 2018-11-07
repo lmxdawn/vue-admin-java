@@ -1,12 +1,15 @@
 package com.lmxdawn.admin.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.lmxdawn.admin.entity.AuthAdmin;
 import com.lmxdawn.admin.service.AuthAdminService;
+import com.lmxdawn.admin.utils.ResultVOUtil;
+import com.lmxdawn.admin.vo.PageSimpleVO;
+import com.lmxdawn.admin.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 public class HelloController {
@@ -15,10 +18,13 @@ public class HelloController {
     private AuthAdminService authAdminService;
 
     @GetMapping("/hello")
-    public List<AuthAdmin> hello() {
-        List<AuthAdmin> authAdminList = authAdminService.findByPage(null, 1, 10);
-        System.out.println(authAdminList);
-        return authAdminList;
+    public ResultVO hello(
+            @RequestParam(value = "offset") Integer offset
+            , @RequestParam("offset") Integer limit
+    ) {
+        PageSimpleVO<AuthAdmin> authAdminPageSimpleVO = authAdminService.findByPage(null, offset, limit);
+        return ResultVOUtil.error(1, "ssss");
+        // return ResultVOUtil.success(authAdminPageSimpleVO);
     }
 
 }

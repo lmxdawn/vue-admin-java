@@ -13,7 +13,6 @@
         </where>
         ORDER BY id
         DESC
-        LIMIT #{currIndex} , #{pageSize}
     </select>
 
 </mapper>

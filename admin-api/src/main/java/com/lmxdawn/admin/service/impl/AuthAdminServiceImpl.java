@@ -1,8 +1,11 @@
 package com.lmxdawn.admin.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.lmxdawn.admin.dao.AuthAdminDao;
 import com.lmxdawn.admin.entity.AuthAdmin;
 import com.lmxdawn.admin.service.AuthAdminService;
+import com.lmxdawn.admin.vo.PageSimpleVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,14 +20,16 @@ public class AuthAdminServiceImpl implements AuthAdminService {
     private AuthAdminDao authAdminDao;
     
     @Override
-    public List<AuthAdmin> findByPage(String username, Integer currPage, Integer pageSize) {
-        currPage = currPage > 0 ? currPage : 1;
-        pageSize = pageSize > 0 && pageSize <= 20 ? pageSize : 20;
+    public PageSimpleVO<AuthAdmin> findByPage(String username, Integer currPage, Integer pageSize) {
         Map<String, Object> map = new HashMap<>();
         map.put("username", username);
-        map.put("currIndex", (currPage - 1) * pageSize);
-        map.put("pageSize", pageSize);
-        return authAdminDao.findByPage(map);
+        PageHelper.offsetPage(currPage, pageSize);
+        List<AuthAdmin> list = authAdminDao.findByPage(map);
+        PageInfo<AuthAdmin> page = new PageInfo<>(list);
+        PageSimpleVO<AuthAdmin> pageSimpleVO = new PageSimpleVO<>();
+        pageSimpleVO.setTotal(page.getTotal());
+        pageSimpleVO.setList(page.getList());
+        return pageSimpleVO;
     }
     
 }

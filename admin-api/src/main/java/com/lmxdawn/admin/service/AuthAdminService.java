@@ -2,11 +2,10 @@ package com.lmxdawn.admin.service;
 
 
 import com.lmxdawn.admin.entity.AuthAdmin;
-
-import java.util.List;
+import com.lmxdawn.admin.vo.PageSimpleVO;
 
 public interface AuthAdminService {
 
-    List<AuthAdmin> findByPage(String username, Integer currPage, Integer pageSize);
+    PageSimpleVO<AuthAdmin> findByPage(String username, Integer currPage, Integer pageSize);
     
 }
