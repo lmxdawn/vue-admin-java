@@ -31,5 +31,10 @@ public class AuthAdminServiceImpl implements AuthAdminService {
         pageSimpleVO.setList(page.getList());
         return pageSimpleVO;
     }
-    
+
+    @Override
+    public AuthAdmin findByUserName(String userName) {
+        return authAdminDao.findByUserName(userName);
+    }
+
 }

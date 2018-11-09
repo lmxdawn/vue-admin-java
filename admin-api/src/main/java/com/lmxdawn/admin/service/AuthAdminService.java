@@ -7,5 +7,7 @@ import com.lmxdawn.admin.vo.PageSimpleVO;
 public interface AuthAdminService {
 
     PageSimpleVO<AuthAdmin> findByPage(String username, Integer currPage, Integer pageSize);
+
+    AuthAdmin findByUserName(String userName);
     
 }

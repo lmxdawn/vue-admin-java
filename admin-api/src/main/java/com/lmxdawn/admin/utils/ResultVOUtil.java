@@ -1,5 +1,6 @@
 package com.lmxdawn.admin.utils;
 
+import com.lmxdawn.admin.enums.ResultEnum;
 import com.lmxdawn.admin.vo.ResultVO;
 
 import java.util.HashMap;
@@ -36,6 +37,25 @@ public class ResultVOUtil {
         Map data = new HashMap();
         resultVO.setData(data);
         return resultVO;
+    }
+
+    /**
+     * 错误时返回
+     * @param resultEnum 错误枚举类
+     * @return {@link ResultVO}
+     */
+    public static ResultVO error(ResultEnum resultEnum) {
+        return error(resultEnum.getCode(), resultEnum.getMessage());
+    }
+
+    /**
+     * 错误时返回
+     * @param resultEnum 错误枚举类
+     * @param message 错误的信息
+     * @return {@link ResultVO}
+     */
+    public static ResultVO error(ResultEnum resultEnum, String message) {
+        return error(resultEnum.getCode(), message);
     }
 
 }

@@ -22,6 +22,13 @@ public interface AuthAdminDao {
      * @return
      */
     AuthAdmin findById(Long id);
+
+    /**
+     * 根据Name
+     * @param userName 用户名
+     * @return
+     */
+    AuthAdmin findByUserName(String userName);
     
     /**
      * 插入
