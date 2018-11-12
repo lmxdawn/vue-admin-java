@@ -15,4 +15,13 @@
         DESC
     </select>
 
+    <select id="findByUserName" parameterType="hashmap" resultType="com.lmxdawn.admin.entity.AuthAdmin">
+        SELECT id,avatar
+        FROM auth_admin
+        <where>
+            username = #{username}
+        </where>
+        LIMIT 1
+    </select>
+
 </mapper>
