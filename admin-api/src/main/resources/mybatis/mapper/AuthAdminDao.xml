@@ -16,10 +16,19 @@
     </select>
 
     <select id="findByUserName" parameterType="hashmap" resultType="com.lmxdawn.admin.entity.AuthAdmin">
-        SELECT id,avatar
+        SELECT id,password
         FROM auth_admin
         <where>
             username = #{username}
+        </where>
+        LIMIT 1
+    </select>
+
+    <select id="findById" parameterType="hashmap" resultType="com.lmxdawn.admin.entity.AuthAdmin">
+        SELECT id,username,avatar
+        FROM auth_admin
+        <where>
+            id = #{id}
         </where>
         LIMIT 1
     </select>

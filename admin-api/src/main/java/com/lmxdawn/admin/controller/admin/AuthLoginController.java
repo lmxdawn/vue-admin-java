@@ -1,4 +1,4 @@
-package com.lmxdawn.admin.controller.auth;
+package com.lmxdawn.admin.controller.admin;
 
 import com.lmxdawn.admin.entity.AuthAdmin;
 import com.lmxdawn.admin.enums.ResultEnum;
@@ -25,9 +25,9 @@ import java.util.Map;
  * 登录相关
  */
 @RestController
-@RequestMapping("/auth/login")
+@RequestMapping("/admin/auth/login")
 @Slf4j
-public class LoginController {
+public class AuthLoginController {
 
     @Autowired
     private AuthAdminService authAdminService;
@@ -55,7 +55,7 @@ public class LoginController {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("admin_id", authAdmin.getId());
-        String token = JwtUtil.createToken(claims, 86400L);
+        String token = JwtUtil.createToken(claims, 86400L); // 一天后过期
 
         log.info("用户信息: " + authAdmin.toString());
         Map<String, Object> map = new HashMap<>();
@@ -70,10 +70,28 @@ public class LoginController {
      */
     @GetMapping("/userInfo")
     public ResultVO userInfo(HttpServletRequest request) {
-        Long id = Long.valueOf(request.getHeader("X-Adminid"));
-        String token = request.getHeader("X-Token");
-        System.out.println(id);
-        System.out.println(token);
+        String adminId = request.getHeader("X-Adminid");
+        Long id = Long.valueOf(adminId);
+
+        AuthAdmin authAdmin = authAdminService.findById(id);
+
+
+        return null;
+    }
+
+    /**
+     * 登出
+     * @return
+     */
+    public ResultVO out(){
+        return null;
+    }
+
+    /**
+     * 修改密码
+     * @return
+     */
+    public ResultVO password() {
         return null;
     }
 

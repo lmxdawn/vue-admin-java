@@ -37,4 +37,9 @@ public class AuthAdminServiceImpl implements AuthAdminService {
         return authAdminDao.findByUserName(userName);
     }
 
+    @Override
+    public AuthAdmin findById(Long id) {
+        return authAdminDao.findById(id);
+    }
+
 }
