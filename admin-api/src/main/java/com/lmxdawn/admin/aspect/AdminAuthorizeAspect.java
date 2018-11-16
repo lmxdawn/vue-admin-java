@@ -1,20 +1,22 @@
 package com.lmxdawn.admin.aspect;
 
+import com.lmxdawn.admin.annotation.AdminAuthRuleAnnotation;
 import com.lmxdawn.admin.enums.ResultEnum;
 import com.lmxdawn.admin.exception.JsonException;
 import com.lmxdawn.admin.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 
 /**
  * 登录验证 AOP
@@ -23,12 +25,19 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 @Slf4j
 public class AdminAuthorizeAspect {
-    @Pointcut("execution(public * com.lmxdawn.admin.controller.*.Auth*.*(..))" +
-            "&& !execution(public * com.lmxdawn.admin.controller.admin.AuthLoginController.index(..))")
-    public void verify() {}
+    @Pointcut("@annotation(com.lmxdawn.admin.annotation.AdminAuthRuleAnnotation)")
+    public void adminAuthVerify() {}
 
-    @Before("verify()")
-    public void doVerify() {
+    @Before("adminAuthVerify()")
+    public void doAdminAuthVerify(JoinPoint joinPoint) {
+
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        //从切面中获取当前方法
+        Method method = signature.getMethod();
+        //得到了方,提取出他的注解
+        AdminAuthRuleAnnotation action = method.getAnnotation(AdminAuthRuleAnnotation.class);
+        System.out.println(action.value());
+
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {
             throw new JsonException(ResultEnum.NOT_NETWORK);

@@ -1,5 +1,6 @@
-package com.lmxdawn.admin.controller.admin;
+package com.lmxdawn.admin.controller.admin.auth;
 
+import com.lmxdawn.admin.annotation.AdminAuthRuleAnnotation;
 import com.lmxdawn.admin.entity.AuthAdmin;
 import com.lmxdawn.admin.enums.ResultEnum;
 import com.lmxdawn.admin.form.LoginForm;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +29,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin/auth/login")
 @Slf4j
-public class AuthLoginController {
+public class LoginController {
 
     @Autowired
     private AuthAdminService authAdminService;
@@ -68,11 +70,12 @@ public class AuthLoginController {
      * 获取登录用户信息
      * @return
      */
+    @AdminAuthRuleAnnotation("admin/auth/login/userInfo")
     @GetMapping("/userInfo")
-    public ResultVO userInfo(HttpServletRequest request) {
+    public ResultVO userInfo(String[] str, HttpServletRequest request) {
         String adminId = request.getHeader("X-Adminid");
         Long id = Long.valueOf(adminId);
-
+        System.out.println(Arrays.toString(str));
         AuthAdmin authAdmin = authAdminService.findById(id);
 
 
