@@ -120,13 +120,16 @@ public class AuthLoginServiceImpl implements AuthLoginService {
         if (authAdmin == null) {
             throw new JsonException(ResultEnum.DATA_NOT);
         }
+        String newPwd = PasswordUtil.authAdminPwd(updatePasswordForm.getOldPassword());
         // 旧密码不对
-        if (!authAdmin.getPassword().equals(PasswordUtil.authAdminPwd(updatePasswordForm.getOldPassword()))) {
+        if (authAdmin.getPassword() != null
+                && !authAdmin.getPassword().equals(newPwd)) {
             throw new JsonException(ResultEnum.DATA_NOT, "旧密码匹配失败");
         }
 
-        authAdmin.setPassword(updatePasswordForm.getNewPassword());
+        AuthAdmin authAdminUp = new AuthAdmin();
+        authAdminUp.setPassword(newPwd);
 
-        return authAdminService.updateAuthAdmin(authAdmin);
+        return authAdminService.updateAuthAdmin(authAdminUp);
     }
 }

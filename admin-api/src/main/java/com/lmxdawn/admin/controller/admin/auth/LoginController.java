@@ -1,12 +1,9 @@
 package com.lmxdawn.admin.controller.admin.auth;
 
 import com.lmxdawn.admin.annotation.AdminAuthRuleAnnotation;
-import com.lmxdawn.admin.entity.AuthAdmin;
 import com.lmxdawn.admin.enums.ResultEnum;
-import com.lmxdawn.admin.exception.JsonException;
 import com.lmxdawn.admin.form.admin.LoginForm;
 import com.lmxdawn.admin.form.admin.UpdatePasswordForm;
-import com.lmxdawn.admin.service.admin.AuthAdminService;
 import com.lmxdawn.admin.service.admin.AuthLoginService;
 import com.lmxdawn.admin.utils.ResultVOUtil;
 import com.lmxdawn.admin.vo.ResultVO;
@@ -74,9 +71,9 @@ public class LoginController {
      */
     @AdminAuthRuleAnnotation("")
     @PostMapping("/admin/auth/login/password")
-    public ResultVO password(@Valid UpdatePasswordForm updatePasswordForm,
+    public ResultVO password(@RequestBody @Valid UpdatePasswordForm updatePasswordForm,
                              BindingResult bindingResult) {
-
+        System.out.println(updatePasswordForm);
         if (bindingResult.hasErrors()) {
             return ResultVOUtil.error(ResultEnum.PARAM_VERIFY_FALL.getCode(),
                     bindingResult.getFieldError().getDefaultMessage());

@@ -1,8 +1,12 @@
 package com.lmxdawn.admin.service.admin.impl;
 
 import com.lmxdawn.admin.dto.admin.LoginUserInfoDTO;
+import com.lmxdawn.admin.entity.AuthAdmin;
 import com.lmxdawn.admin.form.admin.LoginForm;
+import com.lmxdawn.admin.form.admin.UpdatePasswordForm;
+import com.lmxdawn.admin.service.admin.AuthAdminService;
 import com.lmxdawn.admin.service.admin.AuthLoginService;
+import com.lmxdawn.admin.utils.PasswordUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +24,8 @@ public class AuthLoginServiceImplTest {
 
     @Resource
     private AuthLoginService authLoginService;
+    @Resource
+    private AuthAdminService authAdminService;
 
     @Test
     public void loginToken() {
@@ -39,5 +45,24 @@ public class AuthLoginServiceImplTest {
         LoginUserInfoDTO loginUserInfoDTO = authLoginService.findByAdminId(1L);
         System.out.println(loginUserInfoDTO);
         assertNotNull(loginUserInfoDTO);
+    }
+
+    @Test
+    public void updatePassword() {
+
+        Long adminId = 1L;
+        String oldPwd = "admin";
+        String newPwd = "admin";
+        UpdatePasswordForm updatePasswordForm = new UpdatePasswordForm();
+        updatePasswordForm.setAdminId(adminId);
+        updatePasswordForm.setNewPassword(newPwd);
+        updatePasswordForm.setOldPassword(oldPwd);
+        boolean b = authLoginService.updatePassword(updatePasswordForm);
+
+        AuthAdmin authAdmin = authAdminService.findPwdById(adminId);
+
+        assertNotNull(authAdmin);
+
+        assertEquals(authAdmin.getPassword(), PasswordUtil.authAdminPwd(newPwd));
     }
 }

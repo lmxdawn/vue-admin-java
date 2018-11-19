@@ -3,6 +3,7 @@ package com.lmxdawn.admin.form.admin;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * 修改密码的表单
@@ -10,7 +11,7 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class UpdatePasswordForm {
 
-    @NotEmpty(message = "参数错误！")
+    @NotNull(message = "参数错误！")
     private Long adminId;
 
     @NotEmpty(message = "请输入旧密码")

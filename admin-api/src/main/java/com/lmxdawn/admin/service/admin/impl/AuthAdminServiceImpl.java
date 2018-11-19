@@ -54,7 +54,7 @@ public class AuthAdminServiceImpl implements AuthAdminService {
      */
     @Override
     public AuthAdmin findPwdById(Long id) {
-        return authAdminDao.findById(id);
+        return authAdminDao.findPwdById(id);
     }
 
     @Override
