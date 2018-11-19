@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lmxdawn.admin.dao.AuthRoleAdminDao" >
+<mapper namespace="com.lmxdawn.admin.dao.auth.AuthRoleAdminDao" >
 
-    <select id="findByRoleIdIn" resultType="com.lmxdawn.admin.entity.AuthRoleAdmin">
+    <select id="selectByAdminId" resultType="com.lmxdawn.admin.entity.AuthRoleAdmin">
         SELECT role_id
         FROM auth_role_admin
         where admin_id = #{adminId}
-        LIMIT 1
     </select>
 
 </mapper>

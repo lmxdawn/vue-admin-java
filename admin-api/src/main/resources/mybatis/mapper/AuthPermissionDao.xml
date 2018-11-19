@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lmxdawn.admin.dao.AuthPermissionDao" >
+<mapper namespace="com.lmxdawn.admin.dao.auth.AuthPermissionDao" >
 
-    <select id="findByRoleIdIn" resultType="com.lmxdawn.admin.entity.AuthPermission">
+    <select id="selectByRoleIdIn" resultType="com.lmxdawn.admin.entity.AuthPermission">
         SELECT permission_rule_id
         FROM auth_permission
         where role_id IN

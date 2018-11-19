@@ -25,6 +25,15 @@ public class ResultVOUtil {
     }
 
     /**
+     * 成功时返回
+     * @return {@link ResultVO}
+     */
+    public static ResultVO success() {
+        Map data = new HashMap();
+        return success(data);
+    }
+
+    /**
      * 错误时返回
      * @param code 错误码
      * @param message 错误信息

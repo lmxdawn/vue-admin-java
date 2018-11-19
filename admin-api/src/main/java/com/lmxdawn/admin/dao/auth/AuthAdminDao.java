@@ -1,4 +1,4 @@
-package com.lmxdawn.admin.dao;
+package com.lmxdawn.admin.dao.auth;
 
 import com.lmxdawn.admin.entity.AuthAdmin;
 import org.apache.ibatis.annotations.Mapper;
@@ -24,6 +24,13 @@ public interface AuthAdminDao {
     AuthAdmin findById(Long id);
 
     /**
+     * 根据id查询 password
+     * @param id 传入的id
+     * @return
+     */
+    AuthAdmin findPwdById(Long id);
+
+    /**
      * 根据Name
      * @param userName 用户名
      * @return
@@ -42,7 +49,7 @@ public interface AuthAdminDao {
      * @param authAdmin
      * @return
      */
-    boolean update(AuthAdmin authAdmin);
+    boolean updateAuthAdmin(AuthAdmin authAdmin);
     
     /**
      * 删除

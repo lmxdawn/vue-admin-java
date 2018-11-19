@@ -1,13 +1,18 @@
-package com.lmxdawn.admin.dto;
+package com.lmxdawn.admin.dto.admin;
+
+import lombok.Data;
+
+import java.util.List;
 
 /**
  * 登录用户的信息
  */
+@Data
 public class LoginUserInfoDTO {
 
     private Long id;
     private String username;
     private String avatar;
     // 权限列表
-    private String[] authRules;
+    private List<String> authRules;
 }

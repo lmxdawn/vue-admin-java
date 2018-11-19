@@ -3,10 +3,11 @@ package com.lmxdawn.admin.controller.admin.auth;
 import com.lmxdawn.admin.annotation.AdminAuthRuleAnnotation;
 import com.lmxdawn.admin.entity.AuthAdmin;
 import com.lmxdawn.admin.enums.ResultEnum;
-import com.lmxdawn.admin.form.LoginForm;
-import com.lmxdawn.admin.service.AuthAdminService;
-import com.lmxdawn.admin.utils.JwtUtil;
-import com.lmxdawn.admin.utils.PasswordUtil;
+import com.lmxdawn.admin.exception.JsonException;
+import com.lmxdawn.admin.form.admin.LoginForm;
+import com.lmxdawn.admin.form.admin.UpdatePasswordForm;
+import com.lmxdawn.admin.service.admin.AuthAdminService;
+import com.lmxdawn.admin.service.admin.AuthLoginService;
 import com.lmxdawn.admin.utils.ResultVOUtil;
 import com.lmxdawn.admin.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
@@ -14,88 +15,80 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 登录相关
  */
 @RestController
-@RequestMapping("/admin/auth/login")
 @Slf4j
 public class LoginController {
 
     @Autowired
-    private AuthAdminService authAdminService;
+    private AuthLoginService authLoginService;
 
     /**
      * 用户登录
      * @return
      */
-    @PostMapping(value = "/index")
-    public ResultVO index(@Valid LoginForm loginForm,
+    @PostMapping(value = "/admin/auth/login/index")
+    public ResultVO index(@RequestBody @Valid LoginForm loginForm,
                           BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return ResultVOUtil.error(ResultEnum.PARAM_VERIFY_FALL.getCode(),
-                    bindingResult.getFieldError().getDefaultMessage());
+            return ResultVOUtil.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
 
-        AuthAdmin authAdmin = authAdminService.findByUserName(loginForm.getUsername());
-        if (authAdmin == null) {
-            return ResultVOUtil.error(ResultEnum.DATA_NOT, "用户名或密码错误");
-        }
-
-        if (!PasswordUtil.authAdminPwd(loginForm.getPwd()).equals(authAdmin.getPassword())) {
-            return ResultVOUtil.error(ResultEnum.DATA_NOT, "用户名或密码错误");
-        }
-
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("admin_id", authAdmin.getId());
-        String token = JwtUtil.createToken(claims, 86400L); // 一天后过期
-
-        log.info("用户信息: " + authAdmin.toString());
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", authAdmin.getId());
-        map.put("token", token);
-        return ResultVOUtil.success(map);
+        return ResultVOUtil.success(authLoginService.loginToken(loginForm));
     }
 
     /**
      * 获取登录用户信息
      * @return
      */
-    @AdminAuthRuleAnnotation("admin/auth/login/userInfo")
-    @GetMapping("/userInfo")
-    public ResultVO userInfo(String[] str, HttpServletRequest request) {
+    @AdminAuthRuleAnnotation("")
+    @GetMapping("/admin/auth/login/userInfo")
+    public ResultVO userInfo(HttpServletRequest request) {
         String adminId = request.getHeader("X-Adminid");
         Long id = Long.valueOf(adminId);
-        System.out.println(Arrays.toString(str));
-        AuthAdmin authAdmin = authAdminService.findById(id);
 
-
-        return null;
+        return ResultVOUtil.success(authLoginService.findByAdminId(id));
     }
 
     /**
      * 登出
      * @return
      */
+    @AdminAuthRuleAnnotation("")
+    @PostMapping("/admin/auth/login/out")
     public ResultVO out(){
-        return null;
+        return ResultVOUtil.success();
     }
 
     /**
      * 修改密码
      * @return
      */
-    public ResultVO password() {
-        return null;
+    @AdminAuthRuleAnnotation("")
+    @PostMapping("/admin/auth/login/password")
+    public ResultVO password(@Valid UpdatePasswordForm updatePasswordForm,
+                             BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return ResultVOUtil.error(ResultEnum.PARAM_VERIFY_FALL.getCode(),
+                    bindingResult.getFieldError().getDefaultMessage());
+        }
+
+        boolean b = authLoginService.updatePassword(updatePasswordForm);
+
+        if (b) {
+            return ResultVOUtil.success();
+        }
+
+        return ResultVOUtil.error(ResultEnum.DATA_CHANGE);
     }
 
 }

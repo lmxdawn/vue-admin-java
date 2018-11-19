@@ -12,7 +12,9 @@ public enum ResultEnum {
     NOT_NETWORK(1, "系统繁忙，请稍后再试。"),
     LOGIN_VERIFY_FALL(2, "登录失效"),
     PARAM_VERIFY_FALL(3, "参数验证错误"),
-    DATA_NOT(4, "没有相关数据"),
+    AUTH_FAILED(4, "权限验证失败"),
+    DATA_NOT(5, "没有相关数据"),
+    DATA_CHANGE(6, "数据没有任何更改"),
 
     ;
 

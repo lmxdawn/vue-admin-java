@@ -1,4 +1,4 @@
-package com.lmxdawn.admin.service;
+package com.lmxdawn.admin.service.admin;
 
 
 import com.lmxdawn.admin.entity.AuthAdmin;
@@ -16,5 +16,19 @@ public interface AuthAdminService {
      * @return
      */
     AuthAdmin findById(Long id);
+
+    /**
+     * 根据id获取
+     * @param id
+     * @return
+     */
+    AuthAdmin findPwdById(Long id);
+
+    /**
+     * 更新
+     * @param authAdmin
+     * @return
+     */
+    boolean updateAuthAdmin(AuthAdmin authAdmin);
 
 }

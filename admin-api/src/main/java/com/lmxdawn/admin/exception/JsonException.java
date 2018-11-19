@@ -13,7 +13,11 @@ public class JsonException extends RuntimeException{
 
     public JsonException(ResultEnum resultEnum) {
         super(resultEnum.getMessage());
+        this.code = resultEnum.getCode();
+    }
 
+    public JsonException(ResultEnum resultEnum, String message) {
+        super(message);
         this.code = resultEnum.getCode();
     }
 

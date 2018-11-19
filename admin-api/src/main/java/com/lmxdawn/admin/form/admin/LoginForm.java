@@ -1,4 +1,4 @@
-package com.lmxdawn.admin.form;
+package com.lmxdawn.admin.form.admin;
 
 import lombok.Data;
 
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotEmpty;
 public class LoginForm {
 
     @NotEmpty(message = "用户名不能为空")
-    private String username;
+    private String userName;
 
     @NotEmpty(message = "密码不能为空")
     private String pwd;

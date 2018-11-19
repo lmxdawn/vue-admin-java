@@ -1,10 +1,10 @@
-package com.lmxdawn.admin.service.impl;
+package com.lmxdawn.admin.service.admin.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.lmxdawn.admin.dao.AuthAdminDao;
+import com.lmxdawn.admin.dao.auth.AuthAdminDao;
 import com.lmxdawn.admin.entity.AuthAdmin;
-import com.lmxdawn.admin.service.AuthAdminService;
+import com.lmxdawn.admin.service.admin.AuthAdminService;
 import com.lmxdawn.admin.vo.PageSimpleVO;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +37,30 @@ public class AuthAdminServiceImpl implements AuthAdminService {
         return authAdminDao.findByUserName(userName);
     }
 
+    /**
+     * 根据id 获取需要的info
+     * @param id
+     * @return
+     */
     @Override
     public AuthAdmin findById(Long id) {
         return authAdminDao.findById(id);
     }
+
+    /**
+     * 根据 id 获取密码字段
+     * @param id
+     * @return
+     */
+    @Override
+    public AuthAdmin findPwdById(Long id) {
+        return authAdminDao.findById(id);
+    }
+
+    @Override
+    public boolean updateAuthAdmin(AuthAdmin authAdmin) {
+        return authAdminDao.updateAuthAdmin(authAdmin);
+    }
+
 
 }

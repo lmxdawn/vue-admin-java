@@ -1,8 +1,7 @@
 package com.lmxdawn.admin.controller;
 
-import com.github.pagehelper.PageInfo;
 import com.lmxdawn.admin.entity.AuthAdmin;
-import com.lmxdawn.admin.service.AuthAdminService;
+import com.lmxdawn.admin.service.admin.AuthAdminService;
 import com.lmxdawn.admin.utils.ResultVOUtil;
 import com.lmxdawn.admin.vo.PageSimpleVO;
 import com.lmxdawn.admin.vo.ResultVO;

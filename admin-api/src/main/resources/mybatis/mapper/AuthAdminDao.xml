@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lmxdawn.admin.dao.AuthAdminDao" >
+<mapper namespace="com.lmxdawn.admin.dao.auth.AuthAdminDao" >
 
     <select id="findByPage" parameterType="hashmap" resultType="com.lmxdawn.admin.entity.AuthAdmin">
         SELECT id,username
@@ -32,5 +32,27 @@
         </where>
         LIMIT 1
     </select>
+
+    <select id="findPwdById" parameterType="hashmap" resultType="com.lmxdawn.admin.entity.AuthAdmin">
+        SELECT password
+        FROM auth_admin
+        <where>
+            id = #{id}
+        </where>
+        LIMIT 1
+    </select>
+
+    <update id="updateAuthAdmin" parameterType="com.lmxdawn.admin.entity.AuthAdmin">
+        UPDATE auth_admin
+        <set>
+            <if test="username != null">username=#{username},</if>
+            <if test="avatar != null">avatar=#{avatar},</if>
+            <if test="password != null">password=#{password},</if>
+            <if test="last_login_ip != null">last_login_ip=#{last_login_ip},</if>
+            <if test="last_login_time != null">last_login_time=#{last_login_time}</if>
+            <if test="status != null">status=#{status}</if>
+        </set>
+        WHERE id=#{id}
+    </update>
 
 </mapper>

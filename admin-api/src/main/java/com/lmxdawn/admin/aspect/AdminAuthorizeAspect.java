@@ -26,17 +26,15 @@ import java.lang.reflect.Method;
 @Slf4j
 public class AdminAuthorizeAspect {
     @Pointcut("@annotation(com.lmxdawn.admin.annotation.AdminAuthRuleAnnotation)")
-    public void adminAuthVerify() {}
+    public void adminLoginVerify() {
+    }
 
-    @Before("adminAuthVerify()")
+    /**
+     * 登录验证
+     * @param joinPoint
+     */
+    @Before("adminLoginVerify()")
     public void doAdminAuthVerify(JoinPoint joinPoint) {
-
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        //从切面中获取当前方法
-        Method method = signature.getMethod();
-        //得到了方,提取出他的注解
-        AdminAuthRuleAnnotation action = method.getAnnotation(AdminAuthRuleAnnotation.class);
-        System.out.println(action.value());
 
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {
@@ -56,6 +54,26 @@ public class AdminAuthorizeAspect {
             throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
         }
 
+        // 判断是否进行权限验证
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        //从切面中获取当前方法
+        Method method = signature.getMethod();
+        //得到了方,提取出他的注解
+        AdminAuthRuleAnnotation action = method.getAnnotation(AdminAuthRuleAnnotation.class);
+        // 如果不为空则进行权限验证
+        if (!action.value().equals("")) {
+            System.out.println(action.value());
+            authRuleVerify(action.value());
+        }
 
     }
+
+    /**
+     * 权限验证
+     * @param authRule
+     */
+    private void authRuleVerify(String authRule) {
+        throw new JsonException(ResultEnum.AUTH_FAILED);
+    }
+
 }
