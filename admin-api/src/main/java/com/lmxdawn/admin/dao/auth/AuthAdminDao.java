@@ -1,9 +1,8 @@
 package com.lmxdawn.admin.dao.auth;
 
-import com.lmxdawn.admin.entity.AuthAdmin;
+import com.lmxdawn.admin.entity.auth.AuthAdmin;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +10,10 @@ import java.util.Map;
 public interface AuthAdminDao {
     
     /**
-     * 查询列表
+     * 后台业务查询列表
      * @return 列表
      */
-    List<AuthAdmin> findByPage(Map<String,Object> map);
+    List<AuthAdmin> listAdminPage(Map<String,Object> map);
     
     /**
      * 根据id查询
@@ -42,7 +41,7 @@ public interface AuthAdminDao {
      * @param authAdmin
      * @return
      */
-    boolean insert(AuthAdmin authAdmin);
+    boolean insertAuthAdmin(AuthAdmin authAdmin);
     
     /**
      * 更新

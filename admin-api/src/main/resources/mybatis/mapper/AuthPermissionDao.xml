@@ -3,7 +3,7 @@
 
 <mapper namespace="com.lmxdawn.admin.dao.auth.AuthPermissionDao" >
 
-    <select id="selectByRoleIdIn" resultType="com.lmxdawn.admin.entity.AuthPermission">
+    <select id="listByRoleIdIn" resultType="com.lmxdawn.admin.entity.auth.AuthPermission">
         SELECT permission_rule_id
         FROM auth_permission
         where role_id IN

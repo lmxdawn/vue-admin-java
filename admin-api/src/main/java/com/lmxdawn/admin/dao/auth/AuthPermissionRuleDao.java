@@ -1,6 +1,6 @@
 package com.lmxdawn.admin.dao.auth;
 
-import com.lmxdawn.admin.entity.AuthPermissionRule;
+import com.lmxdawn.admin.entity.auth.AuthPermissionRule;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,6 +14,6 @@ public interface AuthPermissionRuleDao {
      * @param ids 传入的ids
      * @return
      */
-    List<AuthPermissionRule> selectByIdIn(List<Long> ids);
+    List<AuthPermissionRule> listByIdIn(List<Long> ids);
     
 }

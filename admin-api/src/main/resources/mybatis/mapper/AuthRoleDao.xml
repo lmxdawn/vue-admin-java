@@ -3,5 +3,27 @@
 
 <mapper namespace="com.lmxdawn.admin.dao.auth.AuthRoleDao" >
 
+    <select id="listAdminPage" parameterType="hashmap" resultType="com.lmxdawn.admin.entity.auth.AuthRole">
+        SELECT id,name,status,remark,create_time,listorder
+        FROM auth_role
+        <where>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="name != null and '' != name">
+                AND `name` LIKE CONCAT(#{name},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="listAuthAdminRolePage" parameterType="hashmap" resultType="com.lmxdawn.admin.entity.auth.AuthRole">
+        SELECT id,name
+        FROM auth_role
+        <where>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
 
 </mapper>

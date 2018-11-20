@@ -15,6 +15,7 @@ public enum ResultEnum {
     AUTH_FAILED(4, "权限验证失败"),
     DATA_NOT(5, "没有相关数据"),
     DATA_CHANGE(6, "数据没有任何更改"),
+    DATA_REPEAT(7, "数据已存在"),
 
     ;
 

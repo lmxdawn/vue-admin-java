@@ -3,7 +3,7 @@ package com.lmxdawn.admin.aspect;
 import com.lmxdawn.admin.annotation.AdminAuthRuleAnnotation;
 import com.lmxdawn.admin.enums.ResultEnum;
 import com.lmxdawn.admin.exception.JsonException;
-import com.lmxdawn.admin.utils.JwtUtil;
+import com.lmxdawn.admin.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -49,7 +49,7 @@ public class AdminAuthorizeAspect {
         }
 
         // 验证 token
-        Claims claims = JwtUtil.parse(token);
+        Claims claims = JwtUtils.parse(token);
         if (claims == null || !id.equals(String.valueOf(claims.get("admin_id")))) {
             throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
         }

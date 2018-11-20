@@ -2,7 +2,7 @@ package com.lmxdawn.admin.handler;
 
 import com.lmxdawn.admin.enums.ResultEnum;
 import com.lmxdawn.admin.exception.JsonException;
-import com.lmxdawn.admin.utils.ResultVOUtil;
+import com.lmxdawn.admin.utils.ResultVOUtils;
 import com.lmxdawn.admin.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = JsonException.class)
     public ResultVO handlerJsonException(JsonException e) {
         // 返回对应的错误信息
-        return ResultVOUtil.error(e.getCode(), e.getMessage());
+        return ResultVOUtils.error(e.getCode(), e.getMessage());
     }
 
     // 拦截API异常
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     public ResultVO handlerRuntimeException(RuntimeException e) {
         log.error(e.getMessage());
         // 返回对应的错误信息
-        return ResultVOUtil.error(ResultEnum.NOT_NETWORK);
+        return ResultVOUtils.error(ResultEnum.NOT_NETWORK);
     }
     
 }

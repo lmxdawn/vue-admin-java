@@ -1,10 +1,9 @@
 package com.lmxdawn.admin.dao.auth;
 
-import com.lmxdawn.admin.entity.AuthPermission;
+import com.lmxdawn.admin.entity.auth.AuthPermission;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface AuthPermissionDao {
@@ -14,6 +13,6 @@ public interface AuthPermissionDao {
      * @param roleIds 传入的id
      * @return
      */
-    List<AuthPermission> selectByRoleIdIn(List<Long> roleIds);
+    List<AuthPermission> listByRoleIdIn(List<Long> roleIds);
     
 }

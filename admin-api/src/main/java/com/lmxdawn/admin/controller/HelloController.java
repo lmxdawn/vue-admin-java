@@ -1,8 +1,8 @@
 package com.lmxdawn.admin.controller;
 
-import com.lmxdawn.admin.entity.AuthAdmin;
-import com.lmxdawn.admin.service.admin.AuthAdminService;
-import com.lmxdawn.admin.utils.ResultVOUtil;
+import com.lmxdawn.admin.entity.auth.AuthAdmin;
+import com.lmxdawn.admin.service.auth.AuthAdminService;
+import com.lmxdawn.admin.utils.ResultVOUtils;
 import com.lmxdawn.admin.vo.PageSimpleVO;
 import com.lmxdawn.admin.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +21,9 @@ public class HelloController {
             @RequestParam(value = "offset") Integer offset
             , @RequestParam("offset") Integer limit
     ) {
-        PageSimpleVO<AuthAdmin> authAdminPageSimpleVO = authAdminService.findByPage(null, offset, limit);
-        return ResultVOUtil.error(1, "ssss");
-        // return ResultVOUtil.success(authAdminPageSimpleVO);
+        PageSimpleVO<AuthAdmin> authAdminPageSimpleVO = authAdminService.listAdminPage(0,1, null);
+        return ResultVOUtils.error(1, "ssss");
+        // return ResultVOUtils.success(authAdminPageSimpleVO);
     }
 
 }

@@ -2,10 +2,10 @@ package com.lmxdawn.admin.controller.admin.auth;
 
 import com.lmxdawn.admin.annotation.AdminAuthRuleAnnotation;
 import com.lmxdawn.admin.enums.ResultEnum;
-import com.lmxdawn.admin.form.admin.LoginForm;
-import com.lmxdawn.admin.form.admin.UpdatePasswordForm;
-import com.lmxdawn.admin.service.admin.AuthLoginService;
-import com.lmxdawn.admin.utils.ResultVOUtil;
+import com.lmxdawn.admin.form.admin.auth.LoginForm;
+import com.lmxdawn.admin.form.admin.auth.UpdatePasswordForm;
+import com.lmxdawn.admin.service.auth.AuthLoginService;
+import com.lmxdawn.admin.utils.ResultVOUtils;
 import com.lmxdawn.admin.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +36,10 @@ public class LoginController {
     public ResultVO index(@RequestBody @Valid LoginForm loginForm,
                           BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return ResultVOUtil.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
+            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
 
-        return ResultVOUtil.success(authLoginService.loginToken(loginForm));
+        return ResultVOUtils.success(authLoginService.loginToken(loginForm));
     }
 
     /**
@@ -52,7 +52,7 @@ public class LoginController {
         String adminId = request.getHeader("X-Adminid");
         Long id = Long.valueOf(adminId);
 
-        return ResultVOUtil.success(authLoginService.findByAdminId(id));
+        return ResultVOUtils.success(authLoginService.findByAdminId(id));
     }
 
     /**
@@ -62,7 +62,7 @@ public class LoginController {
     @AdminAuthRuleAnnotation("")
     @PostMapping("/admin/auth/login/out")
     public ResultVO out(){
-        return ResultVOUtil.success();
+        return ResultVOUtils.success();
     }
 
     /**
@@ -75,17 +75,17 @@ public class LoginController {
                              BindingResult bindingResult) {
         System.out.println(updatePasswordForm);
         if (bindingResult.hasErrors()) {
-            return ResultVOUtil.error(ResultEnum.PARAM_VERIFY_FALL.getCode(),
+            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL.getCode(),
                     bindingResult.getFieldError().getDefaultMessage());
         }
 
         boolean b = authLoginService.updatePassword(updatePasswordForm);
 
         if (b) {
-            return ResultVOUtil.success();
+            return ResultVOUtils.success();
         }
 
-        return ResultVOUtil.error(ResultEnum.DATA_CHANGE);
+        return ResultVOUtils.error(ResultEnum.DATA_CHANGE);
     }
 
 }

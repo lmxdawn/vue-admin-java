@@ -3,10 +3,16 @@
 
 <mapper namespace="com.lmxdawn.admin.dao.auth.AuthRoleAdminDao" >
 
-    <select id="selectByAdminId" resultType="com.lmxdawn.admin.entity.AuthRoleAdmin">
+    <select id="listByAdminId" resultType="com.lmxdawn.admin.entity.auth.AuthRoleAdmin">
         SELECT role_id
         FROM auth_role_admin
         where admin_id = #{adminId}
+    </select>
+
+    <select id="listByRoleId" resultType="com.lmxdawn.admin.entity.auth.AuthRoleAdmin">
+        SELECT admin_id
+        FROM auth_role_admin
+        where role_id = #{roleId}
     </select>
 
 </mapper>

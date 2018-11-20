@@ -1,6 +1,6 @@
 package com.lmxdawn.admin.dao.auth;
 
-import com.lmxdawn.admin.entity.AuthRole;
+import com.lmxdawn.admin.entity.auth.AuthRole;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -10,18 +10,17 @@ import java.util.Map;
 public interface AuthRoleDao {
 
     /**
-     * 查询列表
+     * 后台管理业务查询列表
      * @return 列表
      */
-    List<AuthRole> findByPage(Map<String, Object> map);
-    
+    List<AuthRole> listAdminPage(Map<String,Object> map);
+
     /**
-     * 根据id查询
-     * @param id 传入的id
-     * @return
+     * 返回id,name 字段的列表
+     * @return 列表
      */
-    AuthRole findById(Long id);
-    
+    List<AuthRole> listAuthAdminRolePage(Map<String,Object> map);
+
     /**
      * 插入
      * @param authAdmin
