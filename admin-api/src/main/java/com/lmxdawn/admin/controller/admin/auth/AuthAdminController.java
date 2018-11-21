@@ -1,6 +1,7 @@
 package com.lmxdawn.admin.controller.admin.auth;
 
 import com.github.pagehelper.PageInfo;
+import com.lmxdawn.admin.annotation.AdminAuthRuleAnnotation;
 import com.lmxdawn.admin.entity.auth.AuthAdmin;
 import com.lmxdawn.admin.entity.auth.AuthRoleAdmin;
 import com.lmxdawn.admin.enums.ResultEnum;
@@ -39,12 +40,13 @@ public class AuthAdminController {
     /**
      * 获取管理员列表
      */
+    @AdminAuthRuleAnnotation("/admin/auth/admin/index")
     @GetMapping("/admin/auth/admin/index")
     public ResultVO index(@RequestParam(value = "page",defaultValue = "1") Integer page,
                           @RequestParam(value = "limit",defaultValue = "20") Integer limit,
                           @RequestParam(value = "status", required = false) Integer status,
                           @RequestParam(value = "username", required = false) String username,
-                          @RequestParam(value = "role_id", required = false) Long roleId) {
+                          @RequestParam(value = "roleId", required = false) Long roleId) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("status", status);
@@ -91,6 +93,7 @@ public class AuthAdminController {
     /**
      * 获取角色列表
      */
+    @AdminAuthRuleAnnotation("/admin/auth/admin/roleList")
     @GetMapping("/admin/auth/admin/roleList")
     public ResultVO roleList(@RequestParam(value = "page",defaultValue = "1") Integer page,
                              @RequestParam(value = "limit",defaultValue = "50") Integer limit,
@@ -105,6 +108,7 @@ public class AuthAdminController {
      * 新增
      * @return
      */
+    @AdminAuthRuleAnnotation("/admin/auth/admin/save")
     @PostMapping("/admin/auth/admin/save")
     public ResultVO save(@RequestBody @Valid AuthAdminForm authAdminForm,
                          BindingResult bindingResult) {
@@ -127,6 +131,7 @@ public class AuthAdminController {
      * 修改
      * @return
      */
+    @AdminAuthRuleAnnotation("/admin/auth/admin/edit")
     @PostMapping("/admin/auth/admin/edit")
     public ResultVO edit(@RequestBody @Valid AuthAdminForm authAdminForm,
                          BindingResult bindingResult) {
@@ -150,6 +155,7 @@ public class AuthAdminController {
      * 删除
      * @return
      */
+    @AdminAuthRuleAnnotation("/admin/auth/admin/delete")
     @PostMapping("/admin/auth/admin/delete")
     public ResultVO delete(@RequestBody AuthAdminForm authAdminForm) {
 
