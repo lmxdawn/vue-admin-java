@@ -96,23 +96,23 @@
             </otherwise>
         </choose>
         <choose>
-            <when test="last_login_ip != null">
-                #{last_login_ip},
+            <when test="lastLoginIp != null">
+                #{lastLoginIp},
             </when>
             <otherwise>
                 '',
             </otherwise>
         </choose>
         <choose>
-            <when test="last_login_time != null">
-                #{last_login_time},
+            <when test="lastLoginTime != null">
+                #{lastLoginTime},
             </when>
             <otherwise>
                 '0000-00-00 00:00:00',
             </otherwise>
         </choose>
-        #{create_time},
-        #{status})
+        #{createTime},
+        #{status,jdbcType=INTEGER})
     </insert>
 
     <update id="updateAuthAdmin" parameterType="com.lmxdawn.admin.entity.auth.AuthAdmin">
@@ -121,11 +121,15 @@
             <if test="username != null">username=#{username},</if>
             <if test="avatar != null">avatar=#{avatar},</if>
             <if test="password != null">password=#{password},</if>
-            <if test="last_login_ip != null">last_login_ip=#{last_login_ip},</if>
-            <if test="last_login_time != null">last_login_time=#{last_login_time}</if>
+            <if test="lastLoginIp != null">last_login_ip=#{lastLoginIp},</if>
+            <if test="lastLoginTime != null">last_login_time=#{lastLoginTime}</if>
             <if test="status != null">status=#{status}</if>
         </set>
         WHERE id=#{id}
     </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from auth_admin where id = #{id}
+    </delete>
 
 </mapper>

@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class AuthRoleAdmin {
 
-  private long roleId;
-  private long adminId;
+  private Long roleId;
+  private Long adminId;
 
 }

@@ -55,6 +55,6 @@ public interface AuthAdminDao {
      * @param id
      * @return
      */
-    boolean delete(Long id);
+    boolean deleteById(Long id);
     
 }

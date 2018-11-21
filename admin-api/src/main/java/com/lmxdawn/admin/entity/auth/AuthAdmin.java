@@ -22,11 +22,11 @@ public class AuthAdmin {
     // 性别
     private Integer sex;
     // 最后登录ip
-    private String last_login_ip;
+    private String lastLoginIp;
     // 最后登录时间
-    private Date last_login_time;
+    private Date lastLoginTime;
     // 创建时间
-    private Date create_time;
+    private Date createTime;
     // 状态
     private Integer status;
     

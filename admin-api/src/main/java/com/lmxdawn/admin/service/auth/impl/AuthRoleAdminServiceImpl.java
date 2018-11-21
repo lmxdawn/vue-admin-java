@@ -6,6 +6,8 @@ import com.lmxdawn.admin.service.auth.AuthRoleAdminService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -25,6 +27,19 @@ public class AuthRoleAdminServiceImpl implements AuthRoleAdminService {
     }
 
     /**
+     * 根据多个 adminId 查询角色列表
+     * @param adminIds
+     * @return
+     */
+    @Override
+    public List<AuthRoleAdmin> listByAdminIdIn(List<Long> adminIds) {
+        if (adminIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return authRoleAdminDao.listByAdminIdIn(adminIds);
+    }
+
+    /**
      * 根据 roleId 获取 管理员id
      * @param roleId
      * @return
@@ -32,5 +47,55 @@ public class AuthRoleAdminServiceImpl implements AuthRoleAdminService {
     @Override
     public List<AuthRoleAdmin> listByRoleId(Long roleId) {
         return authRoleAdminDao.listByRoleId(roleId);
+    }
+
+    /**
+     * 批量插入
+     * @param authRoleAdminList
+     * @return
+     */
+    @Override
+    public int insertAuthRoleAdminAll(List<AuthRoleAdmin> authRoleAdminList) {
+
+        if (authRoleAdminList == null || authRoleAdminList.isEmpty()) {
+            return 0;
+        }
+
+        return authRoleAdminDao.insertAuthRoleAdminAll(authRoleAdminList);
+    }
+
+    /**
+     * 根据 角色ids 和 管理员 adminId 批量插入
+     * @param roles
+     * @param adminId
+     * @return
+     */
+    @Override
+    public int insertRolesAdminIdAll(List<Long> roles, Long adminId) {
+
+        List<AuthRoleAdmin> authRoleAdminList = new ArrayList<>();
+        roles.forEach(v -> {
+            if (v != null) {
+                AuthRoleAdmin authRoleAdmin = new AuthRoleAdmin();
+                authRoleAdmin.setRoleId(v);
+                authRoleAdmin.setAdminId(adminId);
+                authRoleAdminList.add(authRoleAdmin);
+            }
+        });
+        if (!authRoleAdminList.isEmpty()) {
+            return insertAuthRoleAdminAll(authRoleAdminList);
+        }
+
+        return 0;
+    }
+
+    /**
+     * 根据 adminId 删除对应的权限
+     * @param adminId
+     * @return
+     */
+    @Override
+    public boolean deleteByAdminId(Long adminId) {
+        return authRoleAdminDao.deleteByAdminId(adminId);
     }
 }

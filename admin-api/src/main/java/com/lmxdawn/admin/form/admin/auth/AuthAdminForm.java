@@ -21,6 +21,6 @@ public class AuthAdminForm {
     // 状态
     @NotNull(message = "请选择状态")
     private Integer status;
-
+    // 角色ids
     private List<Long> roles;
 }

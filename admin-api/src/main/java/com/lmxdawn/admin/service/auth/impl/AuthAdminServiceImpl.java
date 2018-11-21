@@ -4,19 +4,18 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lmxdawn.admin.dao.auth.AuthAdminDao;
 import com.lmxdawn.admin.entity.auth.AuthAdmin;
-import com.lmxdawn.admin.entity.auth.AuthRoleAdmin;
 import com.lmxdawn.admin.enums.ResultEnum;
 import com.lmxdawn.admin.exception.JsonException;
+import com.lmxdawn.admin.form.admin.auth.AuthAdminForm;
 import com.lmxdawn.admin.service.auth.AuthAdminService;
 import com.lmxdawn.admin.service.auth.AuthRoleAdminService;
-import com.lmxdawn.admin.vo.PageSimpleVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthAdminServiceImpl implements AuthAdminService {
@@ -28,27 +27,13 @@ public class AuthAdminServiceImpl implements AuthAdminService {
     private AuthRoleAdminService authRoleAdminService;
     
     @Override
-    public PageSimpleVO<AuthAdmin> listAdminPage(Integer page, Integer limit, Map<String, Object> map) {
-        if (map != null
-                && map.containsKey("role_id")
-                && map.get("role_id") != null) {
-            List<AuthRoleAdmin> authRoleAdmins = authRoleAdminService.listByRoleId((Long) map.get("role_id"));
-            List<Long> ids = new ArrayList<>();
-            if (authRoleAdmins != null && !authRoleAdmins.isEmpty()) {
-                ids = authRoleAdmins.stream().map(AuthRoleAdmin::getAdminId).collect(Collectors.toList());
-            }
-            map.put("ids", ids);
-        }
+    public PageInfo<AuthAdmin> listAdminPage(Integer page, Integer limit, Map<String, Object> map) {
         page = page != null && page > 0 ? page : 1;
         limit = limit != null && limit > 0 && limit < 20 ? limit : 20;
         int offset = (page - 1) * limit;
         PageHelper.offsetPage(offset, limit);
         List<AuthAdmin> list = authAdminDao.listAdminPage(map);
-        PageInfo<AuthAdmin> pageInfo = new PageInfo<>(list);
-        PageSimpleVO<AuthAdmin> pageSimpleVO = new PageSimpleVO<>();
-        pageSimpleVO.setTotal(pageInfo.getTotal());
-        pageSimpleVO.setList(list);
-        return pageSimpleVO;
+        return new PageInfo<>(list);
     }
 
     @Override
@@ -90,8 +75,26 @@ public class AuthAdminServiceImpl implements AuthAdminService {
                 throw new JsonException(ResultEnum.DATA_REPEAT, "当前管理员已存在");
             }
         }
-
+        authAdmin.setCreateTime(new Date());
         return authAdminDao.insertAuthAdmin(authAdmin);
+    }
+
+    @Override
+    public AuthAdmin insertAuthAdminForm(AuthAdminForm authAdminForm) {
+
+        AuthAdmin authAdmin = new AuthAdmin();
+        BeanUtils.copyProperties(authAdminForm, authAdmin);
+
+        boolean b = insertAuthAdmin(authAdmin);
+        if (!b) {
+            return null;
+        }
+        boolean isRoles = authAdminForm.getRoles() != null && !authAdminForm.getRoles().isEmpty();
+        if (b && isRoles) {
+            authRoleAdminService.insertRolesAdminIdAll(authAdminForm.getRoles(), authAdmin.getId());
+        }
+
+        return authAdmin;
     }
 
     @Override
@@ -100,17 +103,41 @@ public class AuthAdminServiceImpl implements AuthAdminService {
         if (authAdmin.getId() == null) {
             return false;
         }
-
         // 当用户名不为空时，检查是否存在
         if (authAdmin.getUsername() != null) {
             AuthAdmin byUserName = authAdminDao.findByUserName(authAdmin.getUsername());
             // 判断是否存在，剔除自己
-            if (byUserName.getId() != null && !byUserName.getId().equals(authAdmin.getId())) {
+            if (byUserName != null && !authAdmin.getId().equals(byUserName.getId())) {
                 throw new JsonException(ResultEnum.DATA_REPEAT, "当前管理员已存在");
             }
         }
 
         return authAdminDao.updateAuthAdmin(authAdmin);
+    }
+
+    @Override
+    public boolean updateAuthAdminForm(AuthAdminForm authAdminForm) {
+        AuthAdmin authAdmin = new AuthAdmin();
+        BeanUtils.copyProperties(authAdminForm, authAdmin);
+        boolean b = updateAuthAdmin(authAdmin);
+        boolean isRoles = authAdminForm.getRoles() != null && !authAdminForm.getRoles().isEmpty();
+        // 先删除
+        authRoleAdminService.deleteByAdminId(authAdmin.getId());
+        if (b && isRoles) {
+            authRoleAdminService.insertRolesAdminIdAll(authAdminForm.getRoles(), authAdmin.getId());
+        }
+
+        return b;
+    }
+
+    /**
+     * 根据id删除
+     * @param id
+     * @return
+     */
+    @Override
+    public boolean deleteById(Long id) {
+        return authAdminDao.deleteById(id);
     }
 
 

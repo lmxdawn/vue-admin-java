@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lmxdawn.admin.dao.auth.AuthRoleAdminDao" >
+<mapper namespace="com.lmxdawn.admin.dao.auth.AuthRoleAdminDao">
 
     <select id="listByAdminId" resultType="com.lmxdawn.admin.entity.auth.AuthRoleAdmin">
         SELECT role_id
@@ -9,10 +9,34 @@
         where admin_id = #{adminId}
     </select>
 
+    <select id="listByAdminIdIn" resultType="com.lmxdawn.admin.entity.auth.AuthRoleAdmin">
+        SELECT role_id,admin_id
+        FROM auth_role_admin
+        where admin_id in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
     <select id="listByRoleId" resultType="com.lmxdawn.admin.entity.auth.AuthRoleAdmin">
         SELECT admin_id
         FROM auth_role_admin
         where role_id = #{roleId}
     </select>
+
+    <insert id="insertAuthRoleAdminAll">
+        INSERT INTO auth_role_admin
+        (role_id, admin_id)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            <if test="item.roleId != null and item.adminId != null">
+                (#{item.roleId}, #{item.adminId})
+            </if>
+        </foreach>
+    </insert>
+
+    <delete id="deleteByAdminId" parameterType="java.lang.Long">
+        delete from auth_role_admin where admin_id = #{adminId}
+    </delete>
 
 </mapper>
