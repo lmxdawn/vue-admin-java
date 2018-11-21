@@ -31,6 +31,7 @@ public class AdminAuthorizeAspect {
 
     /**
      * 登录验证
+     *
      * @param joinPoint
      */
     @Before("adminLoginVerify()")
@@ -60,20 +61,21 @@ public class AdminAuthorizeAspect {
         Method method = signature.getMethod();
         //得到了方,提取出他的注解
         AdminAuthRuleAnnotation action = method.getAnnotation(AdminAuthRuleAnnotation.class);
-        // 如果不为空则进行权限验证
-        if (!action.value().equals("")) {
-            System.out.println(action.value());
-            authRuleVerify(action.value());
-        }
-
+        // 进行权限验证
+        authRuleVerify(action.value());
     }
 
     /**
      * 权限验证
+     *
      * @param authRule
      */
     private void authRuleVerify(String authRule) {
-        throw new JsonException(ResultEnum.AUTH_FAILED);
+
+        if (authRule != null && authRule.length() > 0) {
+            // throw new JsonException(ResultEnum.AUTH_FAILED);
+        }
+
     }
 
 }
