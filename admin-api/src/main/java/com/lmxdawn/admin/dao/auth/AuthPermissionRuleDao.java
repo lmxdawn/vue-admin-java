@@ -4,6 +4,7 @@ import com.lmxdawn.admin.entity.auth.AuthPermissionRule;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Mapper
@@ -15,5 +16,12 @@ public interface AuthPermissionRuleDao {
      * @return
      */
     List<AuthPermissionRule> listByIdIn(List<Long> ids);
-    
+
+    /**
+     * 查询所有
+     * @param map
+     * @return
+     */
+    List<AuthPermissionRule> listAll(Map<String,Object> map);
+
 }

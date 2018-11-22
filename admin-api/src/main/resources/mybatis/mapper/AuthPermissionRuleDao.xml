@@ -4,12 +4,25 @@
 <mapper namespace="com.lmxdawn.admin.dao.auth.AuthPermissionRuleDao" >
 
     <select id="listByIdIn" resultType="com.lmxdawn.admin.entity.auth.AuthPermissionRule">
-        SELECT name
+        SELECT `name`
         FROM auth_permission_rule
         where id IN
         <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
             #{id}
         </foreach>
+    </select>
+
+    <select id="listAll" resultType="com.lmxdawn.admin.entity.auth.AuthPermissionRule">
+        SELECT `id`,`pid`,`name`,`title`,`status`,`condition`,`listorder`
+        FROM auth_permission_rule
+        <where>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="name != null and '' != name">
+                AND name LIKE CONCAT(#{name},'%')
+            </if>
+        </where>
     </select>
 
 </mapper>
