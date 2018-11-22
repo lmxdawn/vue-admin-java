@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lmxdawn.admin.dao.auth.AuthAdminDao">
+<mapper namespace="com.lmxdawn.api.admin.dao.auth.AuthAdminDao">
 
-    <select id="listAdminPage" parameterType="hashmap" resultType="com.lmxdawn.admin.entity.auth.AuthAdmin">
+    <select id="listAdminPage" parameterType="hashmap" resultType="com.lmxdawn.api.admin.entity.auth.AuthAdmin">
         SELECT id,username,avatar,tel,email,status,last_login_ip,last_login_time,create_time
         FROM auth_admin
         <where>
@@ -24,7 +24,7 @@
         DESC
     </select>
 
-    <select id="findByUserName" parameterType="hashmap" resultType="com.lmxdawn.admin.entity.auth.AuthAdmin">
+    <select id="findByUserName" parameterType="hashmap" resultType="com.lmxdawn.api.admin.entity.auth.AuthAdmin">
         SELECT id,password
         FROM auth_admin
         <where>
@@ -33,7 +33,7 @@
         LIMIT 1
     </select>
 
-    <select id="findById" parameterType="hashmap" resultType="com.lmxdawn.admin.entity.auth.AuthAdmin">
+    <select id="findById" parameterType="hashmap" resultType="com.lmxdawn.api.admin.entity.auth.AuthAdmin">
         SELECT id,username,avatar
         FROM auth_admin
         <where>
@@ -42,7 +42,7 @@
         LIMIT 1
     </select>
 
-    <select id="findPwdById" parameterType="hashmap" resultType="com.lmxdawn.admin.entity.auth.AuthAdmin">
+    <select id="findPwdById" parameterType="hashmap" resultType="com.lmxdawn.api.admin.entity.auth.AuthAdmin">
         SELECT password
         FROM auth_admin
         <where>
@@ -51,7 +51,7 @@
         LIMIT 1
     </select>
 
-    <insert id="insertAuthAdmin" keyProperty="id" parameterType="com.lmxdawn.admin.entity.auth.AuthAdmin">
+    <insert id="insertAuthAdmin" keyProperty="id" parameterType="com.lmxdawn.api.admin.entity.auth.AuthAdmin">
         INSERT INTO auth_admin(username,password,tel,email,avatar,sex,last_login_ip,last_login_time,create_time,status)
         values
         (#{username},
@@ -115,7 +115,7 @@
         #{status,jdbcType=INTEGER})
     </insert>
 
-    <update id="updateAuthAdmin" parameterType="com.lmxdawn.admin.entity.auth.AuthAdmin">
+    <update id="updateAuthAdmin" parameterType="com.lmxdawn.api.admin.entity.auth.AuthAdmin">
         UPDATE auth_admin
         <set>
             <if test="username != null">username=#{username},</if>

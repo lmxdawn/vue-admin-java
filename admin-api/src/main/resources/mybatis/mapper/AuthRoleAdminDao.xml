@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lmxdawn.admin.dao.auth.AuthRoleAdminDao">
+<mapper namespace="com.lmxdawn.api.admin.dao.auth.AuthRoleAdminDao">
 
-    <select id="listByAdminId" resultType="com.lmxdawn.admin.entity.auth.AuthRoleAdmin">
+    <select id="listByAdminId" resultType="com.lmxdawn.api.admin.entity.auth.AuthRoleAdmin">
         SELECT role_id
         FROM auth_role_admin
         where admin_id = #{adminId}
     </select>
 
-    <select id="listByAdminIdIn" resultType="com.lmxdawn.admin.entity.auth.AuthRoleAdmin">
+    <select id="listByAdminIdIn" resultType="com.lmxdawn.api.admin.entity.auth.AuthRoleAdmin">
         SELECT role_id,admin_id
         FROM auth_role_admin
         where admin_id in
@@ -18,7 +18,7 @@
         </foreach>
     </select>
 
-    <select id="listByRoleId" resultType="com.lmxdawn.admin.entity.auth.AuthRoleAdmin">
+    <select id="listByRoleId" resultType="com.lmxdawn.api.admin.entity.auth.AuthRoleAdmin">
         SELECT admin_id
         FROM auth_role_admin
         where role_id = #{roleId}

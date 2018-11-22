@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lmxdawn.admin.dao.auth.AuthRoleDao" >
+<mapper namespace="com.lmxdawn.api.admin.dao.auth.AuthRoleDao" >
 
-    <select id="listAdminPage" parameterType="hashmap" resultType="com.lmxdawn.admin.entity.auth.AuthRole">
+    <select id="listAdminPage" parameterType="hashmap" resultType="com.lmxdawn.api.admin.entity.auth.AuthRole">
         SELECT id,name,status,remark,create_time,listorder
         FROM auth_role
         <where>
@@ -16,7 +16,7 @@
         </where>
     </select>
 
-    <select id="listAuthAdminRolePage" parameterType="hashmap" resultType="com.lmxdawn.admin.entity.auth.AuthRole">
+    <select id="listAuthAdminRolePage" parameterType="hashmap" resultType="com.lmxdawn.api.admin.entity.auth.AuthRole">
         SELECT id,name
         FROM auth_role
         <where>

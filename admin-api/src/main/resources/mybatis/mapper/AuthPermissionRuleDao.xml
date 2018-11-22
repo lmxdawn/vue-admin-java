@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lmxdawn.admin.dao.auth.AuthPermissionRuleDao" >
+<mapper namespace="com.lmxdawn.api.admin.dao.auth.AuthPermissionRuleDao" >
 
-    <select id="listByIdIn" resultType="com.lmxdawn.admin.entity.auth.AuthPermissionRule">
+    <select id="listByIdIn" resultType="com.lmxdawn.api.admin.entity.auth.AuthPermissionRule">
         SELECT `name`
         FROM auth_permission_rule
         where id IN
@@ -12,8 +12,14 @@
         </foreach>
     </select>
 
-    <select id="listAll" resultType="com.lmxdawn.admin.entity.auth.AuthPermissionRule">
-        SELECT `id`,`pid`,`name`,`title`,`status`,`condition`,`listorder`
+    <select id="listByPid" resultType="com.lmxdawn.api.admin.entity.auth.AuthPermissionRule">
+        SELECT `id`,`pid`,`is_leaf`,`name`,`title`,`status`,`condition`,`listorder`
+        FROM auth_permission_rule
+        where pid = #{pid}
+    </select>
+
+    <select id="listAll" resultType="com.lmxdawn.api.admin.entity.auth.AuthPermissionRule">
+        SELECT `id`,`pid`,`is_leaf`,`name`,`title`,`status`,`condition`,`listorder`
         FROM auth_permission_rule
         <where>
             <if test="status != null">
