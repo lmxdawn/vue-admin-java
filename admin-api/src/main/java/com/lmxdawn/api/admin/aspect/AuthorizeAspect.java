@@ -3,6 +3,7 @@ package com.lmxdawn.api.admin.aspect;
 import com.lmxdawn.api.admin.annotation.AuthRuleAnnotation;
 import com.lmxdawn.api.admin.enums.ResultEnum;
 import com.lmxdawn.api.admin.exception.JsonException;
+import com.lmxdawn.api.admin.service.auth.AuthLoginService;
 import com.lmxdawn.api.common.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +16,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 登录验证 AOP
@@ -25,6 +28,10 @@ import java.lang.reflect.Method;
 @Component
 @Slf4j
 public class AuthorizeAspect {
+
+    @Resource
+    private AuthLoginService authLoginService;
+
     @Pointcut("@annotation(com.lmxdawn.api.admin.annotation.AuthRuleAnnotation)")
     public void adminLoginVerify() {
     }
@@ -44,15 +51,22 @@ public class AuthorizeAspect {
         HttpServletRequest request = attributes.getRequest();
 
         String id = request.getHeader("X-Adminid");
+
+        Long adminId = Long.valueOf(id);
+
         String token = request.getHeader("X-Token");
         if (token == null) {
-            // throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
+            throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
         }
 
         // 验证 token
         Claims claims = JwtUtils.parse(token);
-        if (claims == null || !id.equals(String.valueOf(claims.get("admin_id")))) {
-            // throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
+        if (claims == null) {
+            throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
+        }
+        Long jwtAdminId = Long.valueOf(claims.get("admin_id").toString());
+        if (adminId.compareTo(jwtAdminId) != 0) {
+            throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
         }
 
         // 判断是否进行权限验证
@@ -62,7 +76,7 @@ public class AuthorizeAspect {
         //得到了方,提取出他的注解
         AuthRuleAnnotation action = method.getAnnotation(AuthRuleAnnotation.class);
         // 进行权限验证
-        authRuleVerify(action.value());
+        authRuleVerify(action.value(), adminId);
     }
 
     /**
@@ -70,10 +84,18 @@ public class AuthorizeAspect {
      *
      * @param authRule
      */
-    private void authRuleVerify(String authRule) {
+    private void authRuleVerify(String authRule, Long adminId) {
 
         if (authRule != null && authRule.length() > 0) {
-            // throw new JsonException(ResultEnum.AUTH_FAILED);
+
+            List<String> authRules = authLoginService.listRuleByAdminId(adminId);
+            // admin 为最高权限
+            for (String item : authRules) {
+                if (item.equals("admin") || item.equals(authRule)) {
+                    return;
+                }
+            }
+            throw new JsonException(ResultEnum.AUTH_FAILED);
         }
 
     }

@@ -3,12 +3,15 @@ package com.lmxdawn.api.admin.service.auth.impl;
 import com.lmxdawn.api.admin.dao.auth.AuthRoleAdminDao;
 import com.lmxdawn.api.admin.entity.auth.AuthRoleAdmin;
 import com.lmxdawn.api.admin.service.auth.AuthRoleAdminService;
+import com.lmxdawn.api.common.constant.RedisConstant;
+import com.lmxdawn.api.common.utils.CacheUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthRoleAdminServiceImpl implements AuthRoleAdminService {
@@ -73,15 +76,12 @@ public class AuthRoleAdminServiceImpl implements AuthRoleAdminService {
     @Override
     public int insertRolesAdminIdAll(List<Long> roles, Long adminId) {
 
-        List<AuthRoleAdmin> authRoleAdminList = new ArrayList<>();
-        roles.forEach(v -> {
-            if (v != null) {
-                AuthRoleAdmin authRoleAdmin = new AuthRoleAdmin();
-                authRoleAdmin.setRoleId(v);
-                authRoleAdmin.setAdminId(adminId);
-                authRoleAdminList.add(authRoleAdmin);
-            }
-        });
+        List<AuthRoleAdmin> authRoleAdminList = roles.stream().map(aLong -> {
+            AuthRoleAdmin authRoleAdmin = new AuthRoleAdmin();
+            authRoleAdmin.setRoleId(aLong);
+            authRoleAdmin.setAdminId(adminId);
+            return authRoleAdmin;
+        }).collect(Collectors.toList());
         if (!authRoleAdminList.isEmpty()) {
             return insertAuthRoleAdminAll(authRoleAdminList);
         }
@@ -96,6 +96,11 @@ public class AuthRoleAdminServiceImpl implements AuthRoleAdminService {
      */
     @Override
     public boolean deleteByAdminId(Long adminId) {
+
+        // 删除之前缓存权限规则
+        String aarKey = String.format(RedisConstant.ADMIN_AUTH_RULES, adminId);
+        CacheUtils.delete(aarKey);
+
         return authRoleAdminDao.deleteByAdminId(adminId);
     }
 }

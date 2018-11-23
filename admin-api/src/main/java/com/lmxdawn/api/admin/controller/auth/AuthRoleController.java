@@ -48,7 +48,7 @@ public class AuthRoleController {
     /**
      * 角色列表
      */
-    @AuthRuleAnnotation("/admin/auth/role/index")
+    @AuthRuleAnnotation("admin/auth/role/index")
     @GetMapping("/admin/auth/role/index")
     public ResultVO index(@Valid AuthRoleQueryForm authRoleQueryForm,
                           BindingResult bindingResult) {
@@ -77,7 +77,7 @@ public class AuthRoleController {
      * @param id
      * @return
      */
-    @AuthRuleAnnotation("/admin/auth/role/authList")
+    @AuthRuleAnnotation("admin/auth/role/authList")
     @GetMapping("/admin/auth/role/authList")
     public ResultVO authList(@RequestParam("id") Long id) {
 
@@ -97,7 +97,7 @@ public class AuthRoleController {
         return ResultVOUtils.success(restMap);
     }
 
-    @AuthRuleAnnotation("/admin/auth/role/auth")
+    @AuthRuleAnnotation("admin/auth/role/auth")
     @PostMapping("/admin/auth/role/auth")
     public ResultVO auth(@RequestBody @Valid AuthRoleAuthForm authRoleAuthForm,
                          BindingResult bindingResult) {
@@ -130,7 +130,7 @@ public class AuthRoleController {
      * @param bindingResult
      * @return
      */
-    @AuthRuleAnnotation("/admin/auth/role/save")
+    @AuthRuleAnnotation("admin/auth/role/save")
     @PostMapping("/admin/auth/role/save")
     public ResultVO save(@RequestBody @Valid AuthRoleSaveForm authRoleSaveForm,
                          BindingResult bindingResult) {
@@ -165,7 +165,7 @@ public class AuthRoleController {
      * @param bindingResult
      * @return
      */
-    @AuthRuleAnnotation("/admin/auth/role/edit")
+    @AuthRuleAnnotation("admin/auth/role/edit")
     @PostMapping("/admin/auth/role/edit")
     public ResultVO edit(@RequestBody @Valid AuthRoleSaveForm authRoleSaveForm,
                          BindingResult bindingResult) {
@@ -201,7 +201,7 @@ public class AuthRoleController {
      * @param authRoleSaveForm
      * @return
      */
-    @AuthRuleAnnotation("/admin/auth/role/delete")
+    @AuthRuleAnnotation("admin/auth/role/delete")
     @PostMapping("/admin/auth/role/delete")
     public ResultVO delete(@RequestBody AuthRoleSaveForm authRoleSaveForm) {
 
@@ -213,6 +213,11 @@ public class AuthRoleController {
         if (!b) {
             return ResultVOUtils.error(ResultEnum.NOT_NETWORK);
         }
+
+        //TODO 删除角色后先前授权的缓存不会消失
+
+        // 再删除之前的授权
+        authPermissionService.deleteByRoleId(authRoleSaveForm.getId());
 
         return ResultVOUtils.success();
     }

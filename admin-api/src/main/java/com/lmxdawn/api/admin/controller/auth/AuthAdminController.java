@@ -11,6 +11,7 @@ import com.lmxdawn.api.admin.form.auth.AuthAdminQueryForm;
 import com.lmxdawn.api.admin.service.auth.AuthAdminService;
 import com.lmxdawn.api.admin.service.auth.AuthRoleAdminService;
 import com.lmxdawn.api.admin.service.auth.AuthRoleService;
+import com.lmxdawn.api.admin.utils.PasswordUtils;
 import com.lmxdawn.api.admin.vo.auth.AuthAdminRoleVO;
 import com.lmxdawn.api.common.utils.ResultVOUtils;
 import com.lmxdawn.api.admin.vo.PageSimpleVO;
@@ -43,7 +44,7 @@ public class AuthAdminController {
     /**
      * 获取管理员列表
      */
-    @AuthRuleAnnotation("/admin/auth/admin/index")
+    @AuthRuleAnnotation("admin/auth/admin/index")
     @GetMapping("/admin/auth/admin/index")
     public ResultVO index(@Valid AuthAdminQueryForm authAdminQueryForm,
                           BindingResult bindingResult) {
@@ -91,10 +92,10 @@ public class AuthAdminController {
     /**
      * 获取角色列表
      */
-    @AuthRuleAnnotation("/admin/auth/admin/roleList")
+    @AuthRuleAnnotation("admin/auth/admin/roleList")
     @GetMapping("/admin/auth/admin/roleList")
     public ResultVO roleList(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                             @RequestParam(value = "limit", defaultValue = "50") Integer limit) {
+                             @RequestParam(value = "limit", defaultValue = "100") Integer limit) {
 
         List<AuthRole> authRoleList = authRoleService.listAuthAdminRolePage(page, limit, null);
         PageInfo<AuthRole> pageInfo = new PageInfo<>(authRoleList);
@@ -117,7 +118,7 @@ public class AuthAdminController {
      *
      * @return
      */
-    @AuthRuleAnnotation("/admin/auth/admin/save")
+    @AuthRuleAnnotation("admin/auth/admin/save")
     @PostMapping("/admin/auth/admin/save")
     public ResultVO save(@RequestBody @Valid AuthAdminSaveForm authAdminSaveForm,
                          BindingResult bindingResult) {
@@ -141,6 +142,11 @@ public class AuthAdminController {
             return ResultVOUtils.error(ResultEnum.NOT_NETWORK);
         }
 
+        // 插入角色
+        if (authAdminSaveForm.getRoles() != null) {
+            authRoleAdminService.insertRolesAdminIdAll(authAdminSaveForm.getRoles(), authAdmin.getId());
+        }
+
         AuthAdminVo authAdminVo = new AuthAdminVo();
         BeanUtils.copyProperties(authAdmin, authAdminVo);
         authAdminVo.setRoles(authAdminSaveForm.getRoles());
@@ -153,7 +159,7 @@ public class AuthAdminController {
      *
      * @return
      */
-    @AuthRuleAnnotation("/admin/auth/admin/edit")
+    @AuthRuleAnnotation("admin/auth/admin/edit")
     @PostMapping("/admin/auth/admin/edit")
     public ResultVO edit(@RequestBody @Valid AuthAdminSaveForm authAdminSaveForm,
                          BindingResult bindingResult) {
@@ -174,11 +180,21 @@ public class AuthAdminController {
 
         AuthAdmin authAdmin = new AuthAdmin();
         BeanUtils.copyProperties(authAdminSaveForm, authAdmin);
+        if (authAdmin.getPassword() != null) {
+            authAdmin.setPassword(PasswordUtils.authAdminPwd(authAdmin.getPassword()));
+        }
 
         boolean b = authAdminService.updateAuthAdmin(authAdmin);
 
         if (!b) {
             return ResultVOUtils.error(ResultEnum.NOT_NETWORK);
+        }
+
+        // 修改角色
+        if (authAdminSaveForm.getRoles() != null) {
+            // 先删除之前的
+            authRoleAdminService.deleteByAdminId(authAdmin.getId());
+            authRoleAdminService.insertRolesAdminIdAll(authAdminSaveForm.getRoles(), authAdmin.getId());
         }
 
         return ResultVOUtils.success();
@@ -189,7 +205,7 @@ public class AuthAdminController {
      *
      * @return
      */
-    @AuthRuleAnnotation("/admin/auth/admin/delete")
+    @AuthRuleAnnotation("admin/auth/admin/delete")
     @PostMapping("/admin/auth/admin/delete")
     public ResultVO delete(@RequestBody AuthAdminSaveForm authAdminSaveForm) {
 
@@ -201,6 +217,8 @@ public class AuthAdminController {
         if (!b) {
             return ResultVOUtils.error(ResultEnum.NOT_NETWORK);
         }
+        // 先删除之前的角色
+        authRoleAdminService.deleteByAdminId(authAdminSaveForm.getId());
 
         return ResultVOUtils.success();
     }

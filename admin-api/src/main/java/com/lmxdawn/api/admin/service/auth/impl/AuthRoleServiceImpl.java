@@ -39,7 +39,7 @@ public class AuthRoleServiceImpl implements AuthRoleService {
     @Override
     public List<AuthRole> listAuthAdminRolePage(Integer page, Integer limit, Integer status) {
         page = page != null && page > 0 ? page : 1;
-        limit = limit != null && limit > 0 && limit < 20 ? limit : 20;
+        limit = limit != null && limit > 0 && limit < 100 ? limit : 100;
         int offset = (page - 1) * limit;
         PageHelper.offsetPage(offset, limit);
         List<AuthRole> list = authRoleDao.listAuthAdminRolePage(status);

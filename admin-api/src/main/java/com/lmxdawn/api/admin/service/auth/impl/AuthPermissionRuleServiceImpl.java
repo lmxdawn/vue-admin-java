@@ -8,6 +8,7 @@ import com.lmxdawn.api.admin.service.auth.AuthPermissionRuleService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,9 @@ public class AuthPermissionRuleServiceImpl implements AuthPermissionRuleService 
      */
     @Override
     public List<AuthPermissionRule> listByIdIn(List<Long> ids) {
+        if (ids.isEmpty()) {
+            return Collections.emptyList();
+        }
         return authPermissionRuleDao.listByIdIn(ids);
     }
 

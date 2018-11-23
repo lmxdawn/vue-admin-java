@@ -7,7 +7,6 @@ import com.lmxdawn.api.admin.enums.ResultEnum;
 import com.lmxdawn.api.admin.exception.JsonException;
 import com.lmxdawn.api.admin.form.auth.AuthAdminQueryForm;
 import com.lmxdawn.api.admin.service.auth.AuthAdminService;
-import com.lmxdawn.api.admin.service.auth.AuthRoleAdminService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,9 +19,6 @@ public class AuthAdminServiceImpl implements AuthAdminService {
 
     @Resource
     private AuthAdminDao authAdminDao;
-
-    @Resource
-    private AuthRoleAdminService authRoleAdminService;
 
     @Override
     public List<AuthAdmin> listAdminPage(AuthAdminQueryForm authAdminQueryForm) {

@@ -6,6 +6,7 @@ import com.lmxdawn.api.admin.service.auth.AuthPermissionService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -21,6 +22,9 @@ public class AuthPermissionServiceImpl implements AuthPermissionService {
      */
     @Override
     public List<AuthPermission> listByRoleIdIn(List<Long> roleIds) {
+        if (roleIds.isEmpty()) {
+            return Collections.emptyList();
+        }
         return authPermissionDao.listByRoleIdIn(roleIds);
     }
 

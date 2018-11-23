@@ -33,7 +33,7 @@ public class AuthPermissionRuleController {
      * 列表
      * @return
      */
-    @AuthRuleAnnotation("/admin/auth/permission_rule/index")
+    @AuthRuleAnnotation("admin/auth/permission_rule/index")
     @GetMapping("/admin/auth/permission_rule/index")
     public ResultVO index() {
 
@@ -52,7 +52,7 @@ public class AuthPermissionRuleController {
      * @param bindingResult
      * @return
      */
-    @AuthRuleAnnotation("/admin/auth/permission_rule/save")
+    @AuthRuleAnnotation("admin/auth/permission_rule/save")
     @PostMapping("/admin/auth/permission_rule/save")
     public ResultVO save(@RequestBody @Valid AuthPermissionRuleSaveForm authPermissionRuleSaveForm,
                          BindingResult bindingResult) {
@@ -84,7 +84,7 @@ public class AuthPermissionRuleController {
      * @param bindingResult
      * @return
      */
-    @AuthRuleAnnotation("/admin/auth/permission_rule/edit")
+    @AuthRuleAnnotation("admin/auth/permission_rule/edit")
     @PostMapping("/admin/auth/permission_rule/edit")
     public ResultVO edit(@RequestBody @Valid AuthPermissionRuleSaveForm authPermissionRuleSaveForm,
                          BindingResult bindingResult) {
@@ -115,7 +115,7 @@ public class AuthPermissionRuleController {
      * @param authPermissionRuleSaveForm
      * @return
      */
-    @AuthRuleAnnotation("/admin/auth/permission_rule/delete")
+    @AuthRuleAnnotation("admin/auth/permission_rule/delete")
     @PostMapping("/admin/auth/permission_rule/delete")
     public ResultVO delete(@RequestBody AuthPermissionRuleSaveForm authPermissionRuleSaveForm) {
 

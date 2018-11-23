@@ -1,14 +1,14 @@
-package com.lmxdawn.api.admin.dto.auth;
+package com.lmxdawn.api.admin.vo.auth;
 
 import lombok.Data;
 
 import java.util.List;
 
 /**
- * 登录用户的信息
+ * 登录用户的信息视图
  */
 @Data
-public class LoginUserInfoDTO {
+public class LoginUserInfoVO {
 
     private Long id;
     private String username;

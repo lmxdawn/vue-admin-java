@@ -1,33 +1,21 @@
 package com.lmxdawn.api.admin.service.auth.impl;
 
-import com.lmxdawn.api.admin.dto.auth.LoginUserInfoDTO;
-import com.lmxdawn.api.admin.entity.auth.AuthAdmin;
 import com.lmxdawn.api.admin.entity.auth.AuthPermission;
 import com.lmxdawn.api.admin.entity.auth.AuthPermissionRule;
 import com.lmxdawn.api.admin.entity.auth.AuthRoleAdmin;
-import com.lmxdawn.api.admin.enums.ResultEnum;
-import com.lmxdawn.api.admin.exception.JsonException;
-import com.lmxdawn.api.admin.form.auth.LoginForm;
-import com.lmxdawn.api.admin.form.auth.UpdatePasswordForm;
 import com.lmxdawn.api.admin.service.auth.*;
-import com.lmxdawn.api.common.utils.JwtUtils;
-import com.lmxdawn.api.admin.utils.PasswordUtils;
-import com.lmxdawn.api.common.utils.PublicFileUtils;
-import org.springframework.beans.BeanUtils;
+import com.lmxdawn.api.common.constant.RedisConstant;
+import com.lmxdawn.api.common.utils.CacheUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class AuthLoginServiceImpl implements AuthLoginService {
-
-    @Resource
-    private AuthAdminService authAdminService;
 
     @Resource
     private AuthRoleAdminService authRoleAdminService;
@@ -38,98 +26,54 @@ public class AuthLoginServiceImpl implements AuthLoginService {
     @Resource
     private AuthPermissionRuleService authPermissionRuleService;
 
-    /**
-     * 生成登录凭证
-     * @return
-     */
-    @Override
-    public Map<String, Object> loginToken(LoginForm loginForm) {
-        AuthAdmin authAdmin = authAdminService.findByUserName(loginForm.getUserName());
-        if (authAdmin == null) {
-            throw new JsonException(ResultEnum.DATA_NOT, "用户名或密码错误");
-        }
-
-        if (!PasswordUtils.authAdminPwd(loginForm.getPwd()).equals(authAdmin.getPassword())) {
-            throw new JsonException(ResultEnum.DATA_NOT, "用户名或密码错误");
-        }
-
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("admin_id", authAdmin.getId());
-        String token = JwtUtils.createToken(claims, 86400L); // 一天后过期
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", authAdmin.getId());
-        map.put("token", token);
-        return map;
-    }
 
     /**
-     * 根据 adminId 获取需要返回的登录信息
+     * 根据 管理员id 获取权限
      * @param adminId
      * @return
      */
     @Override
-    public LoginUserInfoDTO findByAdminId(Long adminId) {
+    public List<String> listRuleByAdminId(Long adminId) {
 
-        AuthAdmin authAdmin = authAdminService.findById(adminId);
-        if (authAdmin == null) {
-            throw new JsonException(ResultEnum.DATA_NOT);
+        List<String> authRules = new ArrayList<>();
+        // 超级管理员
+        if (adminId.equals(1L)) {
+            authRules.add("admin");
+            return authRules;
         }
-        authAdmin.setAvatar(PublicFileUtils.createUploadUrl(authAdmin.getAvatar()));
+
+        // 如果存在，先从缓存中获取权限
+        String aarKey = String.format(RedisConstant.ADMIN_AUTH_RULES, adminId);
+        if (CacheUtils.hasKey(aarKey)) {
+            return new ArrayList<>(CacheUtils.sGetMembers(aarKey));
+        }
+        log.info("开始获取数据库中的用户的权限规则列表");
+
+        // 获取角色ids
+        List<AuthRoleAdmin> authRoleAdmins = authRoleAdminService.listByAdminId(adminId);
+
+        List<Long> roleIds =authRoleAdmins.stream().map(AuthRoleAdmin::getRoleId).collect(Collectors.toList());
+
+        // 角色授权列表
+        List<AuthPermission> authPermissions = authPermissionService.listByRoleIdIn(roleIds);
+        List<Long> permissionRuleIds  = authPermissions.stream().map(AuthPermission::getPermissionRuleId).collect(Collectors.toList());
+
+        // 获取授权的规则
+        List<AuthPermissionRule> authPermissionRules = authPermissionRuleService.listByIdIn(permissionRuleIds);
 
         // 获取权限列表
-        List<String> authRules = new ArrayList<>();
-        if (authAdmin.getUsername().equals("admin")) {
-            authRules.add("admin");
-        } else {
-            // 获取角色ids
-            List<AuthRoleAdmin> authRoleAdmins = authRoleAdminService.listByAdminId(adminId);
-            List<Long> roleIds = new ArrayList<>();
-            if (authRoleAdmins != null && !authRoleAdmins.isEmpty()) {
-                roleIds = authRoleAdmins.stream().map(AuthRoleAdmin::getRoleId).collect(Collectors.toList());
-            }
-            List<AuthPermission> authPermissions = new ArrayList<>();
-            if (!roleIds.isEmpty()) {
-                // 角色授权列表
-                authPermissions = authPermissionService.listByRoleIdIn(roleIds);
-            }
-            List<Long> permissionRuleIds = new ArrayList<>();
-            if (!authPermissions.isEmpty()) {
-                permissionRuleIds = authPermissions.stream().map(AuthPermission::getPermissionRuleId).collect(Collectors.toList());
-            }
-            List<AuthPermissionRule> authPermissionRules = new ArrayList<>();
-            if (!permissionRuleIds.isEmpty()) {
-                // 获取授权的规则
-                authPermissionRules = authPermissionRuleService.listByIdIn(permissionRuleIds);
-            }
-            if (!authPermissionRules.isEmpty()) {
-                authRules = authPermissionRules.stream().map(AuthPermissionRule::getName).collect(Collectors.toList());
-            }
+        authRules = authPermissionRules.stream().map(AuthPermissionRule::getName).collect(Collectors.toList());
+
+        // 如果为空，则添加一个空值
+        if (authRules.isEmpty()) {
+            authRules.add("");
         }
 
-        LoginUserInfoDTO loginUserInfoDTO = new LoginUserInfoDTO();
-        BeanUtils.copyProperties(authAdmin, loginUserInfoDTO);
-        loginUserInfoDTO.setAuthRules(authRules);
-        return loginUserInfoDTO;
+        String[] strings = authRules.toArray(new String[0]);
+        CacheUtils.sAdd(aarKey, strings);
+        CacheUtils.expire(aarKey, 7200L); // 两小时后过期
+
+        return authRules;
     }
 
-    @Override
-    public boolean updatePassword(UpdatePasswordForm updatePasswordForm) {
-
-        AuthAdmin authAdmin = authAdminService.findPwdById(updatePasswordForm.getAdminId());
-        if (authAdmin == null) {
-            throw new JsonException(ResultEnum.DATA_NOT);
-        }
-        String newPwd = PasswordUtils.authAdminPwd(updatePasswordForm.getOldPassword());
-        // 旧密码不对
-        if (authAdmin.getPassword() != null
-                && !authAdmin.getPassword().equals(newPwd)) {
-            throw new JsonException(ResultEnum.DATA_NOT, "旧密码匹配失败");
-        }
-
-        AuthAdmin authAdminUp = new AuthAdmin();
-        authAdminUp.setPassword(newPwd);
-
-        return authAdminService.updateAuthAdmin(authAdminUp);
-    }
 }
