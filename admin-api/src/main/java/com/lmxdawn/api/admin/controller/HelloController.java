@@ -1,7 +1,5 @@
 package com.lmxdawn.api.admin.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.lmxdawn.api.admin.entity.auth.AuthAdmin;
 import com.lmxdawn.api.admin.service.auth.AuthAdminService;
 import com.lmxdawn.api.common.utils.ResultVOUtils;
 import com.lmxdawn.api.admin.vo.ResultVO;
@@ -21,9 +19,7 @@ public class HelloController {
             @RequestParam(value = "offset") Integer offset
             , @RequestParam("offset") Integer limit
     ) {
-        PageInfo<AuthAdmin> authAdminPageSimpleVO = authAdminService.listAdminPage(0,1, null);
         return ResultVOUtils.error(1, "ssss");
-        // return ResultVOUtils.success(authAdminPageSimpleVO);
     }
 
 }

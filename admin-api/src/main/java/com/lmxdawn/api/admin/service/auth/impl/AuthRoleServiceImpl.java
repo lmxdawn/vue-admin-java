@@ -1,20 +1,15 @@
 package com.lmxdawn.api.admin.service.auth.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.lmxdawn.api.admin.dao.auth.AuthRoleDao;
 import com.lmxdawn.api.admin.entity.auth.AuthRole;
+import com.lmxdawn.api.admin.form.auth.AuthRoleQueryForm;
 import com.lmxdawn.api.admin.service.auth.AuthRoleService;
-import com.lmxdawn.api.admin.vo.PageSimpleVO;
-import com.lmxdawn.api.admin.vo.auth.AuthAdminRoleVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthRoleServiceImpl implements AuthRoleService {
@@ -24,51 +19,75 @@ public class AuthRoleServiceImpl implements AuthRoleService {
 
     /**
      * 查询列表
-     * @param page
-     * @param limit
-     * @param map
      * @return
      */
     @Override
-    public PageSimpleVO<AuthRole> listAdminPage(Integer page, Integer limit, Map<String, Object> map) {
-        page = page != null && page > 0 ? page : 1;
-        limit = limit != null && limit > 0 && limit < 20 ? limit : 20;
-        int offset = (page - 1) * limit;
-        PageHelper.offsetPage(offset, limit);
-        List<AuthRole> list = authRoleDao.listAdminPage(map);
-        PageInfo<AuthRole> pageInfo = new PageInfo<>(list);
-        PageSimpleVO<AuthRole> pageSimpleVO = new PageSimpleVO<>();
-        pageSimpleVO.setTotal(pageInfo.getTotal());
-        pageSimpleVO.setList(list);
-        return pageSimpleVO;
+    public List<AuthRole> listAdminPage(AuthRoleQueryForm authRoleQueryForm) {
+        int offset = (authRoleQueryForm.getPage() - 1) * authRoleQueryForm.getLimit();
+        PageHelper.offsetPage(offset, authRoleQueryForm.getLimit());
+        List<AuthRole> list = authRoleDao.listAdminPage(authRoleQueryForm);
+        return list;
     }
 
     /**
      * 查询管理员页面的列表
      * @param page
      * @param limit
-     * @param map
+     * @param status
      * @return
      */
     @Override
-    public PageSimpleVO<AuthAdminRoleVO> listAuthAdminRolePage(Integer page, Integer limit, Map<String, Object> map) {
+    public List<AuthRole> listAuthAdminRolePage(Integer page, Integer limit, Integer status) {
         page = page != null && page > 0 ? page : 1;
         limit = limit != null && limit > 0 && limit < 20 ? limit : 20;
         int offset = (page - 1) * limit;
         PageHelper.offsetPage(offset, limit);
-        List<AuthRole> list = authRoleDao.listAuthAdminRolePage(map);
-        PageInfo<AuthRole> pageInfo = new PageInfo<>(list);
-        PageSimpleVO<AuthAdminRoleVO> pageSimpleVO = new PageSimpleVO<>();
-        pageSimpleVO.setTotal(pageInfo.getTotal());
-        List<AuthAdminRoleVO> authAdminRoleVOS = new ArrayList<>();
-        if (!list.isEmpty()) {
-            authAdminRoleVOS = list.stream().map(e -> {
-                AuthAdminRoleVO authAdminRoleVO = new AuthAdminRoleVO();
-                BeanUtils.copyProperties(e, authAdminRoleVO);
-                return authAdminRoleVO;
-            }).collect(Collectors.toList());
-        }
-        pageSimpleVO.setList(authAdminRoleVOS);
-        return pageSimpleVO;
+        List<AuthRole> list = authRoleDao.listAuthAdminRolePage(status);
+        return list;
+    }
+
+    /**
+     * 根据名称查询
+     * @param name
+     * @return
+     */
+    @Override
+    public AuthRole findByName(String name) {
+        return authRoleDao.findByName(name);
+    }
+
+    /**
+     * 插入
+     * @param authRole
+     * @return
+     */
+    @Override
+    public boolean insertAuthRole(AuthRole authRole) {
+
+        authRole.setCreateTime(new Date());
+        authRole.setUpdateTime(new Date());
+
+        return authRoleDao.insertAuthRole(authRole);
+    }
+
+    /**
+     * 修改
+     * @param authRole
+     * @return
+     */
+    @Override
+    public boolean updateAuthRole(AuthRole authRole) {
+        authRole.setUpdateTime(new Date());
+        return authRoleDao.updateAuthRole(authRole);
+    }
+
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
+    @Override
+    public boolean deleteById(Long id) {
+        return authRoleDao.deleteById(id);
     }
 }

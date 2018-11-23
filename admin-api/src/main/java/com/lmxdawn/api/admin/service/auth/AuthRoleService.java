@@ -2,15 +2,22 @@ package com.lmxdawn.api.admin.service.auth;
 
 
 import com.lmxdawn.api.admin.entity.auth.AuthRole;
-import com.lmxdawn.api.admin.vo.PageSimpleVO;
-import com.lmxdawn.api.admin.vo.auth.AuthAdminRoleVO;
+import com.lmxdawn.api.admin.form.auth.AuthRoleQueryForm;
 
-import java.util.Map;
+import java.util.List;
 
 public interface AuthRoleService {
 
-    PageSimpleVO<AuthRole> listAdminPage(Integer page, Integer limit, Map<String, Object> map);
+    List<AuthRole> listAdminPage(AuthRoleQueryForm authRoleQueryForm);
 
-    PageSimpleVO<AuthAdminRoleVO> listAuthAdminRolePage(Integer page, Integer limit, Map<String, Object> map);
+    List<AuthRole> listAuthAdminRolePage(Integer page, Integer limit, Integer status);
+
+    AuthRole findByName(String name);
+
+    boolean insertAuthRole(AuthRole authRole);
+
+    boolean updateAuthRole(AuthRole authRole);
+
+    boolean deleteById(Long id);
 
 }

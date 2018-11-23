@@ -1,6 +1,7 @@
 package com.lmxdawn.api.admin.dao.auth;
 
 import com.lmxdawn.api.admin.entity.auth.AuthAdmin;
+import com.lmxdawn.api.admin.form.auth.AuthAdminQueryForm;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface AuthAdminDao {
      * 后台业务查询列表
      * @return 列表
      */
-    List<AuthAdmin> listAdminPage(Map<String,Object> map);
+    List<AuthAdmin> listAdminPage(AuthAdminQueryForm authAdminQueryForm);
     
     /**
      * 根据id查询

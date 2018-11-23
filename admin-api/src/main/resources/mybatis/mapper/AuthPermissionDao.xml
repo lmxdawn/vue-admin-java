@@ -12,4 +12,27 @@
         </foreach>
     </select>
 
+    <select id="listByRoleId" resultType="com.lmxdawn.api.admin.entity.auth.AuthPermission">
+        SELECT permission_rule_id
+        FROM auth_permission
+        where role_id = #{roleId}
+    </select>
+
+
+    <insert id="insertAuthPermissionAll">
+        INSERT INTO auth_permission
+        (role_id, permission_rule_id,`type`)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            <if test="item.roleId != null and item.permissionRuleId != null and item.type != null">
+                (#{item.roleId}, #{item.permissionRuleId}, #{item.type})
+            </if>
+        </foreach>
+    </insert>
+
+
+    <delete id="deleteByRoleId" parameterType="java.lang.Long">
+        delete from auth_permission where role_id = #{roleId}
+    </delete>
+
 </mapper>

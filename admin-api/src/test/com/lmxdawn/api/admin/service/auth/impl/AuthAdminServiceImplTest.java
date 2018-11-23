@@ -3,16 +3,14 @@ package com.lmxdawn.api.admin.service.auth.impl;
 import com.github.pagehelper.PageInfo;
 import com.lmxdawn.api.BaseAdminApplicationTest;
 import com.lmxdawn.api.admin.entity.auth.AuthAdmin;
-import com.lmxdawn.api.admin.form.admin.auth.AuthAdminForm;
+import com.lmxdawn.api.admin.form.auth.AuthAdminSaveForm;
+import com.lmxdawn.api.admin.form.auth.AuthAdminQueryForm;
 import com.lmxdawn.api.admin.service.auth.AuthAdminService;
 import org.junit.Test;
 
 import javax.annotation.Resource;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -30,13 +28,14 @@ public class AuthAdminServiceImplTest  extends BaseAdminApplicationTest {
         String username = "api";
         Long roleId = 1L;
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("status", status);
-        map.put("username", username);
-        map.put("fields", "id,username");
+        AuthAdminQueryForm authAdminQueryForm = new AuthAdminQueryForm();
+        authAdminQueryForm.setPage(page);
+        authAdminQueryForm.setLimit(limit);
+        authAdminQueryForm.setStatus(status);
+        authAdminQueryForm.setUsername(username);
 
-        PageInfo<AuthAdmin> authAdminPageInfo = authAdminService.listAdminPage(page, limit, map);
-
+        List<AuthAdmin> authAdminList = authAdminService.listAdminPage(authAdminQueryForm);
+        PageInfo<AuthAdmin> authAdminPageInfo = new PageInfo<>(authAdminList);
         System.out.println(authAdminPageInfo.getList());
         assertTrue(authAdminPageInfo.getList().size() > 0);
     }
@@ -69,29 +68,4 @@ public class AuthAdminServiceImplTest  extends BaseAdminApplicationTest {
     public void updateAuthAdmin() {
     }
 
-    @Test
-    public void insertAuthAdminForm() {
-
-        AuthAdminForm authAdminForm = new AuthAdminForm();
-        authAdminForm.setUsername("aaa");
-        authAdminForm.setStatus(0);
-        authAdminForm.setRoles(Arrays.asList(1L, 2L));
-
-        AuthAdmin authAdmin = authAdminService.insertAuthAdminForm(authAdminForm);
-
-        assertNotNull(authAdmin);
-    }
-
-    @Test
-    public void updateAuthAdminForm() {
-
-        AuthAdminForm authAdminForm = new AuthAdminForm();
-        authAdminForm.setId(7L);
-        authAdminForm.setUsername("aaa");
-        authAdminForm.setStatus(0);
-        authAdminForm.setRoles(Arrays.asList(2L, 4L));
-
-        boolean b = authAdminService.updateAuthAdminForm(authAdminForm);
-        assertTrue(b);
-    }
 }

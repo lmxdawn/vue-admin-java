@@ -1,4 +1,4 @@
-package com.lmxdawn.api.admin.form.admin.auth;
+package com.lmxdawn.api.admin.form.auth;
 
 import lombok.Data;
 

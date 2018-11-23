@@ -1,10 +1,10 @@
 package com.lmxdawn.api.admin.dao.auth;
 
 import com.lmxdawn.api.admin.entity.auth.AuthRole;
+import com.lmxdawn.api.admin.form.auth.AuthRoleQueryForm;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface AuthRoleDao {
@@ -13,33 +13,35 @@ public interface AuthRoleDao {
      * 后台管理业务查询列表
      * @return 列表
      */
-    List<AuthRole> listAdminPage(Map<String,Object> map);
+    List<AuthRole> listAdminPage(AuthRoleQueryForm authRoleQueryForm);
 
     /**
      * 返回id,name 字段的列表
      * @return 列表
      */
-    List<AuthRole> listAuthAdminRolePage(Map<String,Object> map);
+    List<AuthRole> listAuthAdminRolePage(Integer status);
+
+    AuthRole findByName(String name);
 
     /**
      * 插入
      * @param authAdmin
      * @return
      */
-    boolean insert(AuthRole authAdmin);
+    boolean insertAuthRole(AuthRole authAdmin);
     
     /**
      * 更新
      * @param authAdmin
      * @return
      */
-    boolean update(AuthRole authAdmin);
+    boolean updateAuthRole(AuthRole authAdmin);
     
     /**
      * 删除
      * @param id
      * @return
      */
-    boolean delete(Long id);
+    boolean deleteById(Long id);
     
 }

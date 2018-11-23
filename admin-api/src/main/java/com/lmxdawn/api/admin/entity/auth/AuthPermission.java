@@ -8,6 +8,8 @@ import lombok.Data;
 @Data
 public class AuthPermission {
 
+    private Long id;
+
     private Long roleId;
 
     private Long permissionRuleId;

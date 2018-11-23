@@ -20,8 +20,7 @@ public class PermissionRuleTreeUtilsTest extends BaseAdminApplicationTest {
     @Test
     public void merge() {
 
-        Map<String,Object> map = new HashMap<>();
-        List<AuthPermissionRule> authPermissionRules = authPermissionRuleService.listAll(map);
+        List<AuthPermissionRule> authPermissionRules = authPermissionRuleService.listAll();
         List<AuthPermissionRuleMergeVO> merge = PermissionRuleTreeUtils.merge(authPermissionRules,0L);
         System.out.println(merge);
 

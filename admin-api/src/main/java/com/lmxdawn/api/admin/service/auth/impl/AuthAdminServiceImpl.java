@@ -1,39 +1,37 @@
 package com.lmxdawn.api.admin.service.auth.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.lmxdawn.api.admin.dao.auth.AuthAdminDao;
 import com.lmxdawn.api.admin.entity.auth.AuthAdmin;
 import com.lmxdawn.api.admin.enums.ResultEnum;
 import com.lmxdawn.api.admin.exception.JsonException;
-import com.lmxdawn.api.admin.form.admin.auth.AuthAdminForm;
+import com.lmxdawn.api.admin.form.auth.AuthAdminQueryForm;
 import com.lmxdawn.api.admin.service.auth.AuthAdminService;
 import com.lmxdawn.api.admin.service.auth.AuthRoleAdminService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AuthAdminServiceImpl implements AuthAdminService {
-    
+
     @Resource
     private AuthAdminDao authAdminDao;
 
     @Resource
     private AuthRoleAdminService authRoleAdminService;
-    
+
     @Override
-    public PageInfo<AuthAdmin> listAdminPage(Integer page, Integer limit, Map<String, Object> map) {
-        page = page != null && page > 0 ? page : 1;
-        limit = limit != null && limit > 0 && limit < 20 ? limit : 20;
-        int offset = (page - 1) * limit;
-        PageHelper.offsetPage(offset, limit);
-        List<AuthAdmin> list = authAdminDao.listAdminPage(map);
-        return new PageInfo<>(list);
+    public List<AuthAdmin> listAdminPage(AuthAdminQueryForm authAdminQueryForm) {
+        if (authAdminQueryForm == null) {
+            return Collections.emptyList();
+        }
+        int offset = (authAdminQueryForm.getPage() - 1) * authAdminQueryForm.getLimit();
+        PageHelper.offsetPage(offset, authAdminQueryForm.getLimit());
+        return authAdminDao.listAdminPage(authAdminQueryForm);
     }
 
     @Override
@@ -79,24 +77,11 @@ public class AuthAdminServiceImpl implements AuthAdminService {
         return authAdminDao.insertAuthAdmin(authAdmin);
     }
 
-    @Override
-    public AuthAdmin insertAuthAdminForm(AuthAdminForm authAdminForm) {
-
-        AuthAdmin authAdmin = new AuthAdmin();
-        BeanUtils.copyProperties(authAdminForm, authAdmin);
-
-        boolean b = insertAuthAdmin(authAdmin);
-        if (!b) {
-            return null;
-        }
-        boolean isRoles = authAdminForm.getRoles() != null && !authAdminForm.getRoles().isEmpty();
-        if (b && isRoles) {
-            authRoleAdminService.insertRolesAdminIdAll(authAdminForm.getRoles(), authAdmin.getId());
-        }
-
-        return authAdmin;
-    }
-
+    /**
+     * 更新
+     * @param authAdmin
+     * @return
+     */
     @Override
     public boolean updateAuthAdmin(AuthAdmin authAdmin) {
 
@@ -113,21 +98,6 @@ public class AuthAdminServiceImpl implements AuthAdminService {
         }
 
         return authAdminDao.updateAuthAdmin(authAdmin);
-    }
-
-    @Override
-    public boolean updateAuthAdminForm(AuthAdminForm authAdminForm) {
-        AuthAdmin authAdmin = new AuthAdmin();
-        BeanUtils.copyProperties(authAdminForm, authAdmin);
-        boolean b = updateAuthAdmin(authAdmin);
-        boolean isRoles = authAdminForm.getRoles() != null && !authAdminForm.getRoles().isEmpty();
-        // 先删除
-        authRoleAdminService.deleteByAdminId(authAdmin.getId());
-        if (b && isRoles) {
-            authRoleAdminService.insertRolesAdminIdAll(authAdminForm.getRoles(), authAdmin.getId());
-        }
-
-        return b;
     }
 
     /**

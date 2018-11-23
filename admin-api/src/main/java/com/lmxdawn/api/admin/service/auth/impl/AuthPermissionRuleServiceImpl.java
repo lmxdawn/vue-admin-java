@@ -2,10 +2,13 @@ package com.lmxdawn.api.admin.service.auth.impl;
 
 import com.lmxdawn.api.admin.dao.auth.AuthPermissionRuleDao;
 import com.lmxdawn.api.admin.entity.auth.AuthPermissionRule;
+import com.lmxdawn.api.admin.enums.ResultEnum;
+import com.lmxdawn.api.admin.exception.JsonException;
 import com.lmxdawn.api.admin.service.auth.AuthPermissionRuleService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +23,7 @@ public class AuthPermissionRuleServiceImpl implements AuthPermissionRuleService 
 
     /**
      * 根据多个id查询
+     *
      * @param ids
      * @return
      */
@@ -30,6 +34,7 @@ public class AuthPermissionRuleServiceImpl implements AuthPermissionRuleService 
 
     /**
      * 根据父级 pid 查询
+     *
      * @param pid
      * @return
      */
@@ -40,11 +45,64 @@ public class AuthPermissionRuleServiceImpl implements AuthPermissionRuleService 
 
     /**
      * 查询所有
-     * @param map
      * @return
      */
     @Override
-    public List<AuthPermissionRule> listAll(Map<String, Object> map) {
-        return authPermissionRuleDao.listAll(map);
+    public List<AuthPermissionRule> listAll() {
+        return authPermissionRuleDao.listAll();
+    }
+
+    /**
+     * 插入
+     * @param authPermissionRule
+     * @return
+     */
+    @Override
+    public boolean insertAuthPermissionRule(AuthPermissionRule authPermissionRule) {
+
+        // 查询是否存在
+        AuthPermissionRule byName = authPermissionRuleDao.findByName(authPermissionRule.getName());
+        if (byName != null) {
+            throw new JsonException(ResultEnum.DATA_REPEAT, "当前权限规则已存在");
+        }
+
+        authPermissionRule.setCreateTime(new Date());
+        authPermissionRule.setUpdateTime(new Date());
+        if (authPermissionRule.getListorder() == null) {
+            authPermissionRule.setListorder(999);
+        }
+        System.out.println(authPermissionRule);
+        return authPermissionRuleDao.insertAuthPermissionRule(authPermissionRule);
+    }
+
+    /**
+     * 更新
+     * @param authPermissionRule
+     * @return
+     */
+    @Override
+    public boolean updateAuthPermissionRule(AuthPermissionRule authPermissionRule) {
+
+        if (authPermissionRule.getName() != null) {
+            // 查询是否存在
+            AuthPermissionRule byName = authPermissionRuleDao.findByName(authPermissionRule.getName());
+            if (byName != null && !authPermissionRule.getId().equals(byName.getId())) {
+                throw new JsonException(ResultEnum.DATA_REPEAT, "当前权限规则已存在");
+            }
+        }
+
+        authPermissionRule.setUpdateTime(new Date());
+        return authPermissionRuleDao.updateAuthPermissionRule(authPermissionRule);
+    }
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public boolean deleteById(Long id) {
+        return authPermissionRuleDao.deleteById(id);
     }
 }

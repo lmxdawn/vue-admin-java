@@ -22,7 +22,7 @@ public interface AuthPermissionRuleDao {
      * @param map
      * @return
      */
-    List<AuthPermissionRule> listAll(Map<String,Object> map);
+    List<AuthPermissionRule> listAll();
 
     /**
      * 根据 父级 pid 查询
@@ -30,5 +30,33 @@ public interface AuthPermissionRuleDao {
      * @return
      */
     List<AuthPermissionRule> listByPid(Long pid);
+
+    /**
+     * 根据 规则名称查询
+     * @param name
+     * @return
+     */
+    AuthPermissionRule findByName(String name);
+
+    /**
+     * 插入
+     * @param authPermissionRule
+     * @return
+     */
+    boolean insertAuthPermissionRule(AuthPermissionRule authPermissionRule);
+
+    /**
+     * 更新
+     * @param authPermissionRule
+     * @return
+     */
+    boolean updateAuthPermissionRule(AuthPermissionRule authPermissionRule);
+
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
+    boolean deleteById(Long id);
 
 }

@@ -1,4 +1,4 @@
-package com.lmxdawn.api.admin.form.admin.auth;
+package com.lmxdawn.api.admin.form.auth;
 
 import lombok.Data;
 
@@ -7,10 +7,10 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * 管理员的表单类
+ * 管理员的提交保存表单
  */
 @Data
-public class AuthAdminForm {
+public class AuthAdminSaveForm {
     // id
     private Long id;
     // 昵称

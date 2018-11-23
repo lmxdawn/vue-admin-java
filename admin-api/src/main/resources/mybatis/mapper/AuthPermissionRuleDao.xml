@@ -21,14 +21,51 @@
     <select id="listAll" resultType="com.lmxdawn.api.admin.entity.auth.AuthPermissionRule">
         SELECT `id`,`pid`,`is_leaf`,`name`,`title`,`status`,`condition`,`listorder`
         FROM auth_permission_rule
-        <where>
-            <if test="status != null">
-                AND status = #{status}
-            </if>
-            <if test="name != null and '' != name">
-                AND name LIKE CONCAT(#{name},'%')
-            </if>
-        </where>
     </select>
+
+    <select id="findByName" resultType="com.lmxdawn.api.admin.entity.auth.AuthPermissionRule">
+        SELECT `id`
+        FROM auth_permission_rule
+        where `name` = #{name}
+        limit 1
+    </select>
+
+    <insert id="insertAuthPermissionRule" keyProperty="id" parameterType="com.lmxdawn.api.admin.entity.auth.AuthPermissionRule">
+        INSERT INTO auth_permission_rule(pid,`name`,`title`,`status`,`condition`,`listorder`,create_time,update_time)
+        values
+        (#{pid},
+        #{name},
+        #{title},
+        #{status},
+        <choose>
+            <when test="condition != null">
+                #{condition},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+        #{listorder},
+        #{createTime},
+        #{updateTime})
+    </insert>
+
+    <update id="updateAuthPermissionRule" parameterType="com.lmxdawn.api.admin.entity.auth.AuthPermissionRule">
+        UPDATE auth_permission_rule
+        <set>
+            <if test="pid != null">pid=#{pid},</if>
+            <if test="name != null">`name`=#{name},</if>
+            <if test="title != null">title=#{title},</if>
+            <if test="status != null">`status`=#{status},</if>
+            <if test="condition != null">`condition`=#{condition},</if>
+            <if test="listorder != null">`listorder`=#{listorder},</if>
+            <if test="updateTime != null">update_time=#{updateTime},</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from auth_permission_rule where id = #{id}
+    </delete>
 
 </mapper>

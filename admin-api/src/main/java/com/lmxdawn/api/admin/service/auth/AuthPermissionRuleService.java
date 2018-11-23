@@ -14,6 +14,13 @@ public interface AuthPermissionRuleService {
 
     List<AuthPermissionRule> listByPid(Long pid);
 
-    List<AuthPermissionRule> listAll(Map<String,Object> map);
+    List<AuthPermissionRule> listAll();
+
+    boolean insertAuthPermissionRule(AuthPermissionRule authPermissionRule);
+
+    boolean updateAuthPermissionRule(AuthPermissionRule authPermissionRule);
+
+    boolean deleteById(Long id);
+
 
 }

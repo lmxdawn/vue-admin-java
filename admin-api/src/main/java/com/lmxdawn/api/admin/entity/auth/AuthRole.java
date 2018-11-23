@@ -2,6 +2,8 @@ package com.lmxdawn.api.admin.entity.auth;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * 角色表
  */
@@ -13,7 +15,7 @@ public class AuthRole {
   private Long pid;
   private Long status;
   private String remark;
-  private Long createTime;
-  private Long updateTime;
   private Long listorder;
+  private Date createTime;
+  private Date updateTime;
 }

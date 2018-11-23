@@ -3,12 +3,15 @@ package com.lmxdawn.api.admin.controller.auth;
 import com.github.pagehelper.PageInfo;
 import com.lmxdawn.api.admin.annotation.AuthRuleAnnotation;
 import com.lmxdawn.api.admin.entity.auth.AuthAdmin;
+import com.lmxdawn.api.admin.entity.auth.AuthRole;
 import com.lmxdawn.api.admin.entity.auth.AuthRoleAdmin;
 import com.lmxdawn.api.admin.enums.ResultEnum;
-import com.lmxdawn.api.admin.form.admin.auth.AuthAdminForm;
+import com.lmxdawn.api.admin.form.auth.AuthAdminSaveForm;
+import com.lmxdawn.api.admin.form.auth.AuthAdminQueryForm;
 import com.lmxdawn.api.admin.service.auth.AuthAdminService;
 import com.lmxdawn.api.admin.service.auth.AuthRoleAdminService;
 import com.lmxdawn.api.admin.service.auth.AuthRoleService;
+import com.lmxdawn.api.admin.vo.auth.AuthAdminRoleVO;
 import com.lmxdawn.api.common.utils.ResultVOUtils;
 import com.lmxdawn.api.admin.vo.PageSimpleVO;
 import com.lmxdawn.api.admin.vo.ResultVO;
@@ -42,44 +45,40 @@ public class AuthAdminController {
      */
     @AuthRuleAnnotation("/admin/auth/admin/index")
     @GetMapping("/admin/auth/admin/index")
-    public ResultVO index(@RequestParam(value = "page",defaultValue = "1") Integer page,
-                          @RequestParam(value = "limit",defaultValue = "20") Integer limit,
-                          @RequestParam(value = "status", required = false) Integer status,
-                          @RequestParam(value = "username", required = false) String username,
-                          @RequestParam(value = "roleId", required = false) Long roleId) {
+    public ResultVO index(@Valid AuthAdminQueryForm authAdminQueryForm,
+                          BindingResult bindingResult) {
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("status", status);
-        map.put("username", username);
+        if (bindingResult.hasErrors()) {
+            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
+        }
 
-        if (roleId != null) {
-            List<AuthRoleAdmin> authRoleAdmins = authRoleAdminService.listByRoleId(roleId);
+        if (authAdminQueryForm.getRoleId() != null) {
+            List<AuthRoleAdmin> authRoleAdmins = authRoleAdminService.listByRoleId(authAdminQueryForm.getRoleId());
             List<Long> ids = new ArrayList<>();
             if (authRoleAdmins != null && !authRoleAdmins.isEmpty()) {
                 ids = authRoleAdmins.stream().map(AuthRoleAdmin::getAdminId).collect(Collectors.toList());
             }
-            map.put("ids", ids);
+            authAdminQueryForm.setIds(ids);
         }
+        List<AuthAdmin> authAdminList = authAdminService.listAdminPage(authAdminQueryForm);
 
-        PageInfo<AuthAdmin> authAdminPageInfo = authAdminService.listAdminPage(page, limit, map);
-        List<Long> adminIds = authAdminPageInfo.getList().stream().map(AuthAdmin::getId).collect(Collectors.toList());
+        // 查询所有的权限
+        List<Long> adminIds = authAdminList.stream().map(AuthAdmin::getId).collect(Collectors.toList());
         List<AuthRoleAdmin> authRoleAdminList = authRoleAdminService.listByAdminIdIn(adminIds);
 
         // 视图列表
-        List<AuthAdminVo> authAdminVoList = new ArrayList<>();
-        authAdminPageInfo.getList().forEach(v -> {
+        List<AuthAdminVo> authAdminVoList = authAdminList.stream().map(item -> {
             AuthAdminVo authAdminVo = new AuthAdminVo();
-            BeanUtils.copyProperties(v, authAdminVo);
-            List<Long> roles = new ArrayList<>();
-            authRoleAdminList.forEach(authRoleAdmin -> {
-                if (v.getId().equals(authRoleAdmin.getAdminId())) {
-                    roles.add(authRoleAdmin.getRoleId());
-                }
-            });
+            BeanUtils.copyProperties(item, authAdminVo);
+            List<Long> roles = authRoleAdminList.stream()
+                    .filter(authRoleAdmin -> authAdminVo.getId().equals(authRoleAdmin.getAdminId()))
+                    .map(AuthRoleAdmin::getRoleId)
+                    .collect(Collectors.toList());
             authAdminVo.setRoles(roles);
-            authAdminVoList.add(authAdminVo);
-        });
+            return authAdminVo;
+        }).collect(Collectors.toList());
 
+        PageInfo<AuthAdmin> authAdminPageInfo = new PageInfo<>(authAdminList);
         PageSimpleVO<AuthAdminVo> authAdminPageSimpleVO = new PageSimpleVO<>();
         authAdminPageSimpleVO.setTotal(authAdminPageInfo.getTotal());
         authAdminPageSimpleVO.setList(authAdminVoList);
@@ -89,81 +88,116 @@ public class AuthAdminController {
     }
 
 
-
     /**
      * 获取角色列表
      */
     @AuthRuleAnnotation("/admin/auth/admin/roleList")
     @GetMapping("/admin/auth/admin/roleList")
-    public ResultVO roleList(@RequestParam(value = "page",defaultValue = "1") Integer page,
-                             @RequestParam(value = "limit",defaultValue = "50") Integer limit,
-                             Map<String, Object> map) {
+    public ResultVO roleList(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                             @RequestParam(value = "limit", defaultValue = "50") Integer limit) {
 
-        return ResultVOUtils.success(authRoleService.listAuthAdminRolePage(page, limit, map));
+        List<AuthRole> authRoleList = authRoleService.listAuthAdminRolePage(page, limit, null);
+        PageInfo<AuthRole> pageInfo = new PageInfo<>(authRoleList);
+        PageSimpleVO<AuthAdminRoleVO> pageSimpleVO = new PageSimpleVO<>();
+        pageSimpleVO.setTotal(pageInfo.getTotal());
+        List<AuthAdminRoleVO> authAdminRoleVOS = authRoleList.stream().map(e -> {
+            AuthAdminRoleVO authAdminRoleVO = new AuthAdminRoleVO();
+            BeanUtils.copyProperties(e, authAdminRoleVO);
+            return authAdminRoleVO;
+        }).collect(Collectors.toList());
+        pageSimpleVO.setList(authAdminRoleVOS);
+
+        return ResultVOUtils.success(pageSimpleVO);
 
     }
 
 
     /**
      * 新增
+     *
      * @return
      */
     @AuthRuleAnnotation("/admin/auth/admin/save")
     @PostMapping("/admin/auth/admin/save")
-    public ResultVO save(@RequestBody @Valid AuthAdminForm authAdminForm,
+    public ResultVO save(@RequestBody @Valid AuthAdminSaveForm authAdminSaveForm,
                          BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
 
+        // 检查是否存在相同名称的管理员
+        AuthAdmin byUserName = authAdminService.findByUserName(authAdminSaveForm.getUsername());
+        if (byUserName != null) {
+            return ResultVOUtils.error(ResultEnum.DATA_REPEAT, "当前管理员已存在");
+        }
 
-        AuthAdmin authAdmin = authAdminService.insertAuthAdminForm(authAdminForm);
+        AuthAdmin authAdmin = new AuthAdmin();
+        BeanUtils.copyProperties(authAdminSaveForm, authAdmin);
+
+        boolean b = authAdminService.insertAuthAdmin(authAdmin);
+
+        if (!b) {
+            return ResultVOUtils.error(ResultEnum.NOT_NETWORK);
+        }
 
         AuthAdminVo authAdminVo = new AuthAdminVo();
         BeanUtils.copyProperties(authAdmin, authAdminVo);
-        authAdminVo.setRoles(authAdminForm.getRoles());
+        authAdminVo.setRoles(authAdminSaveForm.getRoles());
 
         return ResultVOUtils.success(authAdminVo);
     }
 
     /**
      * 修改
+     *
      * @return
      */
     @AuthRuleAnnotation("/admin/auth/admin/edit")
     @PostMapping("/admin/auth/admin/edit")
-    public ResultVO edit(@RequestBody @Valid AuthAdminForm authAdminForm,
+    public ResultVO edit(@RequestBody @Valid AuthAdminSaveForm authAdminSaveForm,
                          BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
 
-        if (authAdminForm.getId() == null) {
+        if (authAdminSaveForm.getId() == null) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, "参数错误！");
         }
 
-        boolean b = authAdminService.updateAuthAdminForm(authAdminForm);
-        if (!b) {
-            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, "网络错误！");
+        // 检查是否存在除了当前管理员的其它名称的管理员
+        AuthAdmin byUserName = authAdminService.findByUserName(authAdminSaveForm.getUsername());
+        if (byUserName != null && !authAdminSaveForm.getId().equals(byUserName.getId())) {
+            return ResultVOUtils.error(ResultEnum.DATA_REPEAT, "当前管理员已存在");
         }
+
+        AuthAdmin authAdmin = new AuthAdmin();
+        BeanUtils.copyProperties(authAdminSaveForm, authAdmin);
+
+        boolean b = authAdminService.updateAuthAdmin(authAdmin);
+
+        if (!b) {
+            return ResultVOUtils.error(ResultEnum.NOT_NETWORK);
+        }
+
         return ResultVOUtils.success();
     }
 
     /**
      * 删除
+     *
      * @return
      */
     @AuthRuleAnnotation("/admin/auth/admin/delete")
     @PostMapping("/admin/auth/admin/delete")
-    public ResultVO delete(@RequestBody AuthAdminForm authAdminForm) {
+    public ResultVO delete(@RequestBody AuthAdminSaveForm authAdminSaveForm) {
 
-        if (authAdminForm.getId() == null) {
+        if (authAdminSaveForm.getId() == null) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, "参数错误！");
         }
 
-        boolean b = authAdminService.deleteById(authAdminForm.getId());
+        boolean b = authAdminService.deleteById(authAdminSaveForm.getId());
         if (!b) {
             return ResultVOUtils.error(ResultEnum.NOT_NETWORK);
         }

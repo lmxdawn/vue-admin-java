@@ -2,8 +2,8 @@ package com.lmxdawn.api.admin.controller.auth;
 
 import com.lmxdawn.api.admin.annotation.AuthRuleAnnotation;
 import com.lmxdawn.api.admin.enums.ResultEnum;
-import com.lmxdawn.api.admin.form.admin.auth.LoginForm;
-import com.lmxdawn.api.admin.form.admin.auth.UpdatePasswordForm;
+import com.lmxdawn.api.admin.form.auth.LoginForm;
+import com.lmxdawn.api.admin.form.auth.UpdatePasswordForm;
 import com.lmxdawn.api.admin.service.auth.AuthLoginService;
 import com.lmxdawn.api.common.utils.ResultVOUtils;
 import com.lmxdawn.api.admin.vo.ResultVO;

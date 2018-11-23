@@ -32,9 +32,7 @@ public class AuthPermissionRuleServiceImplTest extends BaseAdminApplicationTest 
     @Test
     public void listAll() {
 
-        Map<String,Object> map = new HashMap<>();
-        map.put("status", 1);
-        List<AuthPermissionRule> authPermissionRuleList = authPermissionRuleService.listAll(map);
+        List<AuthPermissionRule> authPermissionRuleList = authPermissionRuleService.listAll();
 
         assertTrue(authPermissionRuleList.size() > 0);
     }

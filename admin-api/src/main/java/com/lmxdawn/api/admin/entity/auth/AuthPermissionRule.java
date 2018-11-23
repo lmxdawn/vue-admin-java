@@ -2,6 +2,8 @@ package com.lmxdawn.api.admin.entity.auth;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * 规则表
  */
@@ -13,9 +15,9 @@ public class AuthPermissionRule {
   private Integer isLeaf;
   private String name;
   private String title;
-  private Long status;
+  private Integer status;
   private String condition;
-  private Long listorder;
-  private Long createTime;
-  private Long updateTime;
+  private Integer listorder;
+  private Date createTime;
+  private Date updateTime;
 }

@@ -1,12 +1,13 @@
 package com.lmxdawn.api.admin.service.auth.impl;
 
 import com.lmxdawn.api.BaseAdminApplicationTest;
+import com.lmxdawn.api.admin.entity.auth.AuthRole;
 import com.lmxdawn.api.admin.service.auth.AuthRoleService;
-import com.lmxdawn.api.admin.vo.PageSimpleVO;
-import com.lmxdawn.api.admin.vo.auth.AuthAdminRoleVO;
 import org.junit.Test;
 
 import javax.annotation.Resource;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -25,9 +26,7 @@ public class AuthRoleServiceImplTest  extends BaseAdminApplicationTest {
         Integer page = 1;
         Integer limit = 20;
 
-        PageSimpleVO<AuthAdminRoleVO> adminAuthAdminRoleVOPageSimpleVO = authRoleService.listAuthAdminRolePage(page, limit, null);
-        System.out.println(adminAuthAdminRoleVOPageSimpleVO.getList().size());
-        System.out.println(adminAuthAdminRoleVOPageSimpleVO);
-        assertTrue(adminAuthAdminRoleVOPageSimpleVO.getList().size() > 0);
+        List<AuthRole> authRoleList = authRoleService.listAuthAdminRolePage(page, limit, null);
+        assertTrue(authRoleList.size() > 0);
     }
 }
