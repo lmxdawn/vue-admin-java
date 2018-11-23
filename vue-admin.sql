@@ -73,8 +73,8 @@ CREATE TABLE `auth_admin` (
   `avatar` varchar(255) NOT NULL DEFAULT '' COMMENT '用户头像',
   `sex` smallint(1) NOT NULL DEFAULT '0' COMMENT '性别；0：保密，1：男；2：女',
   `last_login_ip` varchar(16) NOT NULL DEFAULT '' COMMENT '最后登录ip',
-  `last_login_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '最后登录时间',
-  `create_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '注册时间',
+  `last_login_time` datetime NOT NULL COMMENT '最后登录时间',
+  `create_time` datetime NOT NULL COMMENT '注册时间',
   `status` int(11) NOT NULL DEFAULT '1' COMMENT '用户状态 0：禁用； 1：正常 ；2：未验证',
   PRIMARY KEY (`id`),
   KEY `user_login_key` (`username`)
@@ -83,7 +83,7 @@ CREATE TABLE `auth_admin` (
 -- ----------------------------
 -- Records of auth_admin
 -- ----------------------------
-INSERT INTO `auth_admin` VALUES ('1', 'admin', 'c3284d0f94606de1fd2af172aba15bf3', 'admin', 'lmxdawn@gmail.com', 'sssss', '0', '127.0.0.1', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1');
+INSERT INTO `auth_admin` VALUES ('1', 'admin', 'c3284d0f94606de1fd2af172aba15bf3', 'admin', 'lmxdawn@gmail.com', 'sssss', '0', '127.0.0.1', '2018-11-23 10:23:52', '2018-11-23 10:23:52', '1');
 
 -- ----------------------------
 -- Table structure for auth_permission
@@ -116,8 +116,8 @@ CREATE TABLE `auth_permission_rule` (
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态：为1正常，为0禁用',
   `condition` char(100) NOT NULL DEFAULT '' COMMENT '规则表达式，为空表示存在就验证，不为空表示按照条件验证',
   `listorder` int(10) NOT NULL DEFAULT '0' COMMENT '排序，优先级，越小优先级越高',
-  `create_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='规则表';
@@ -125,21 +125,21 @@ CREATE TABLE `auth_permission_rule` (
 -- ----------------------------
 -- Records of auth_permission_rule
 -- ----------------------------
-INSERT INTO `auth_permission_rule` VALUES ('1', '0', '0', 'user_manage', '用户管理', '1', '', '999', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
-INSERT INTO `auth_permission_rule` VALUES ('2', '1', '0', 'user_manage/admin_manage', '管理组1', '1', '', '999', '0000-00-00 00:00:00', '2018-11-23 10:23:52');
-INSERT INTO `auth_permission_rule` VALUES ('3', '2', '0', 'admin/auth/admin/index', '管理员管理', '1', '', '999', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
-INSERT INTO `auth_permission_rule` VALUES ('4', '3', '0', 'admin/auth/admin/save', '添加管理员', '1', '', '999', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
-INSERT INTO `auth_permission_rule` VALUES ('5', '3', '0', 'admin/auth/admin/edit', '编辑管理员', '1', '', '999', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
-INSERT INTO `auth_permission_rule` VALUES ('6', '3', '0', 'admin/auth/admin/delete', '删除管理员', '1', '', '999', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
-INSERT INTO `auth_permission_rule` VALUES ('7', '2', '0', 'admin/auth/role/index', '角色管理', '1', '', '999', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
-INSERT INTO `auth_permission_rule` VALUES ('8', '7', '0', 'admin/auth/role/save', '添加角色', '1', '', '999', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
-INSERT INTO `auth_permission_rule` VALUES ('9', '7', '0', 'admin/auth/role/edit', '编辑角色', '1', '', '999', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
-INSERT INTO `auth_permission_rule` VALUES ('10', '7', '0', 'admin/auth/role/delete', '删除角色', '1', '', '999', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
-INSERT INTO `auth_permission_rule` VALUES ('11', '7', '0', 'admin/auth/role/auth', '角色授权', '1', '', '999', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
-INSERT INTO `auth_permission_rule` VALUES ('12', '2', '0', 'admin/auth/permission_rule/index', '权限管理', '1', '', '999', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
-INSERT INTO `auth_permission_rule` VALUES ('13', '12', '0', 'admin/auth/permission_rule/save', '添加权限', '1', '', '999', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
-INSERT INTO `auth_permission_rule` VALUES ('14', '12', '0', 'admin/auth/permission_rule/edit', '编辑权限', '1', '', '999', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
-INSERT INTO `auth_permission_rule` VALUES ('15', '12', '0', 'admin/auth/permission_rule/delete', '删除权限', '1', '', '999', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+INSERT INTO `auth_permission_rule` VALUES ('1', '0', '0', 'user_manage', '用户管理', '1', '', '999', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
+INSERT INTO `auth_permission_rule` VALUES ('2', '1', '0', 'user_manage/admin_manage', '管理组1', '1', '', '999', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
+INSERT INTO `auth_permission_rule` VALUES ('3', '2', '0', 'admin/auth/admin/index', '管理员管理', '1', '', '999', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
+INSERT INTO `auth_permission_rule` VALUES ('4', '3', '0', 'admin/auth/admin/save', '添加管理员', '1', '', '999', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
+INSERT INTO `auth_permission_rule` VALUES ('5', '3', '0', 'admin/auth/admin/edit', '编辑管理员', '1', '', '999', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
+INSERT INTO `auth_permission_rule` VALUES ('6', '3', '0', 'admin/auth/admin/delete', '删除管理员', '1', '', '999', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
+INSERT INTO `auth_permission_rule` VALUES ('7', '2', '0', 'admin/auth/role/index', '角色管理', '1', '', '999', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
+INSERT INTO `auth_permission_rule` VALUES ('8', '7', '0', 'admin/auth/role/save', '添加角色', '1', '', '999', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
+INSERT INTO `auth_permission_rule` VALUES ('9', '7', '0', 'admin/auth/role/edit', '编辑角色', '1', '', '999', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
+INSERT INTO `auth_permission_rule` VALUES ('10', '7', '0', 'admin/auth/role/delete', '删除角色', '1', '', '999', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
+INSERT INTO `auth_permission_rule` VALUES ('11', '7', '0', 'admin/auth/role/auth', '角色授权', '1', '', '999', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
+INSERT INTO `auth_permission_rule` VALUES ('12', '2', '0', 'admin/auth/permission_rule/index', '权限管理', '1', '', '999', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
+INSERT INTO `auth_permission_rule` VALUES ('13', '12', '0', 'admin/auth/permission_rule/save', '添加权限', '1', '', '999', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
+INSERT INTO `auth_permission_rule` VALUES ('14', '12', '0', 'admin/auth/permission_rule/edit', '编辑权限', '1', '', '999', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
+INSERT INTO `auth_permission_rule` VALUES ('15', '12', '0', 'admin/auth/permission_rule/delete', '删除权限', '1', '', '999', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
 
 -- ----------------------------
 -- Table structure for auth_role
@@ -151,16 +151,16 @@ CREATE TABLE `auth_role` (
   `pid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '父角色ID',
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '状态',
   `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
-  `create_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
-  `listorder` int(3) NOT NULL DEFAULT '0' COMMENT '排序，优先级，越小优先级越高',
+  `listorder` int(10) NOT NULL DEFAULT '0' COMMENT '排序，优先级，越小优先级越高',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='角色表';
 
 -- ----------------------------
 -- Records of auth_role
 -- ----------------------------
-INSERT INTO `auth_role` VALUES ('1', '超级管理员', '0', '1', '拥有网站最高管理员权限！', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0');
+INSERT INTO `auth_role` VALUES ('1', '超级管理员', '0', '1', '拥有网站最高管理员权限！', '0', '2018-11-23 10:23:52', '2018-11-23 10:23:52');
 
 -- ----------------------------
 -- Table structure for auth_role_admin
@@ -187,7 +187,7 @@ CREATE TABLE `file_resource` (
   `path` varchar(255) NOT NULL DEFAULT '' COMMENT '资源的路径（不加 域名的地址）',
   `size` int(11) NOT NULL DEFAULT '0' COMMENT '大小',
   `ext` varchar(10) NOT NULL DEFAULT '' COMMENT '资源的文件后缀',
-  `create_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='资源表';
 
@@ -213,7 +213,7 @@ DROP TABLE IF EXISTS `file_resource_tag`;
 CREATE TABLE `file_resource_tag` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '资源分组的id',
   `tag` varchar(255) NOT NULL DEFAULT '' COMMENT '资源分组的tag',
-  `create_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
+  `create_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='资源的分组表';
 
