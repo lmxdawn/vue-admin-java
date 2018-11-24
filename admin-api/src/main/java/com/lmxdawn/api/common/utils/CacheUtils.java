@@ -1,6 +1,5 @@
 package com.lmxdawn.api.common.utils;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
