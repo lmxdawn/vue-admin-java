@@ -32,10 +32,6 @@
 
 ![donate](https://lmxdawn.github.io/images/show-how1.jpg)
 
-# 演示地址
-
-https://lmxdawn.github.io/video/yanshi.mp4
-
 
 
 # 功能
