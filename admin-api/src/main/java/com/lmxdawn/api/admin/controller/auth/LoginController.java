@@ -12,6 +12,7 @@ import com.lmxdawn.api.admin.utils.PasswordUtils;
 import com.lmxdawn.api.admin.vo.auth.LoginUserInfoVO;
 import com.lmxdawn.api.common.constant.RedisConstant;
 import com.lmxdawn.api.common.utils.CacheUtils;
+import com.lmxdawn.api.common.utils.IpUtils;
 import com.lmxdawn.api.common.utils.JwtUtils;
 import com.lmxdawn.api.common.utils.ResultVOUtils;
 import com.lmxdawn.api.admin.vo.ResultVO;
@@ -47,7 +48,8 @@ public class LoginController {
      */
     @PostMapping(value = "/admin/auth/login/index")
     public ResultVO index(@RequestBody @Valid LoginForm loginForm,
-                          BindingResult bindingResult) {
+                          BindingResult bindingResult,
+                          HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
@@ -60,6 +62,13 @@ public class LoginController {
         if (!PasswordUtils.authAdminPwd(loginForm.getPwd()).equals(authAdmin.getPassword())) {
             throw new JsonException(ResultEnum.DATA_NOT, "用户名或密码错误");
         }
+        
+        // 更新登录状态
+        AuthAdmin authAdminUp = new AuthAdmin();
+        authAdminUp.setId(authAdmin.getId());
+        authAdminUp.setLastLoginTime(new Date());
+        authAdminUp.setLastLoginIp(IpUtils.getIpAddr(request));
+        authAdminService.updateAuthAdmin(authAdminUp);
 
         // 登录成功后获取权限，这里面会设置到缓存
         authLoginService.listRuleByAdminId(authAdmin.getId());
@@ -100,7 +109,6 @@ public class LoginController {
      * 登出
      * @return
      */
-    @AuthRuleAnnotation("")
     @PostMapping("/admin/auth/login/out")
     public ResultVO out(){
         return ResultVOUtils.success();
@@ -110,7 +118,7 @@ public class LoginController {
      * 修改密码
      * @return
      */
-    @AuthRuleAnnotation("")
+    @AuthRuleAnnotation("") // 需要登录验证,但是不需要权限验证时,value 值填空字符串
     @PostMapping("/admin/auth/login/password")
     public ResultVO password(@RequestBody @Valid UpdatePasswordForm updatePasswordForm,
                              BindingResult bindingResult) {

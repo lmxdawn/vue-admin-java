@@ -135,6 +135,10 @@ public class AuthAdminController {
 
         AuthAdmin authAdmin = new AuthAdmin();
         BeanUtils.copyProperties(authAdminSaveForm, authAdmin);
+        
+        if (authAdmin.getPassword() != null) {
+            authAdmin.setPassword(PasswordUtils.authAdminPwd(authAdmin.getPassword()));
+        }
 
         boolean b = authAdminService.insertAuthAdmin(authAdmin);
 
