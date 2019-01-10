@@ -152,10 +152,9 @@ public class AuthRoleController {
             return ResultVOUtils.error(ResultEnum.NOT_NETWORK);
         }
 
-        AuthRoleVO authRoleVO = new AuthRoleVO();
-        BeanUtils.copyProperties(authRole, authRoleVO);
-
-        return ResultVOUtils.success(authRoleVO);
+        Map<String, Long> res = new HashMap<>();
+        res.put("id", authRole.getId());
+        return ResultVOUtils.success(res);
     }
 
     /**

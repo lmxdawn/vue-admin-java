@@ -151,11 +151,9 @@ public class AuthAdminController {
             authRoleAdminService.insertRolesAdminIdAll(authAdminSaveForm.getRoles(), authAdmin.getId());
         }
 
-        AuthAdminVo authAdminVo = new AuthAdminVo();
-        BeanUtils.copyProperties(authAdmin, authAdminVo);
-        authAdminVo.setRoles(authAdminSaveForm.getRoles());
-
-        return ResultVOUtils.success(authAdminVo);
+        Map<String, Long> res = new HashMap<>();
+        res.put("id", authAdmin.getId());
+        return ResultVOUtils.success(res);
     }
 
     /**

@@ -52,7 +52,7 @@ public class AuthLoginServiceImpl implements AuthLoginService {
         // 获取角色ids
         List<AuthRoleAdmin> authRoleAdmins = authRoleAdminService.listByAdminId(adminId);
 
-        List<Long> roleIds =authRoleAdmins.stream().map(AuthRoleAdmin::getRoleId).collect(Collectors.toList());
+        List<Long> roleIds = authRoleAdmins.stream().map(AuthRoleAdmin::getRoleId).collect(Collectors.toList());
 
         // 角色授权列表
         List<AuthPermission> authPermissions = authPermissionService.listByRoleIdIn(roleIds);

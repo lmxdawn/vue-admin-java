@@ -8,7 +8,6 @@ import com.lmxdawn.api.admin.service.auth.AuthPermissionRuleService;
 import com.lmxdawn.api.admin.utils.PermissionRuleTreeUtils;
 import com.lmxdawn.api.admin.vo.ResultVO;
 import com.lmxdawn.api.admin.vo.auth.AuthPermissionRuleMergeVO;
-import com.lmxdawn.api.admin.vo.auth.AuthPermissionRuleVO;
 import com.lmxdawn.api.common.utils.ResultVOUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.validation.BindingResult;
@@ -72,10 +71,9 @@ public class AuthPermissionRuleController {
             return ResultVOUtils.error(ResultEnum.NOT_NETWORK);
         }
 
-        AuthPermissionRuleVO authPermissionRuleVO = new AuthPermissionRuleVO();
-        BeanUtils.copyProperties(authPermissionRule, authPermissionRuleVO);
-
-        return ResultVOUtils.success(authPermissionRuleVO);
+        Map<String, Long> res = new HashMap<>();
+        res.put("id", authPermissionRule.getId());
+        return ResultVOUtils.success(res);
     }
 
     /**

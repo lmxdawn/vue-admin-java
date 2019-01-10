@@ -51,8 +51,12 @@ public class AuthorizeAspect {
         HttpServletRequest request = attributes.getRequest();
 
         String id = request.getHeader("X-Adminid");
-
-        Long adminId = Long.valueOf(id);
+        Long adminId = null;
+        try {
+            adminId = Long.valueOf(id);
+        }catch (Exception e) {
+            throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
+        }
 
         String token = request.getHeader("X-Token");
         if (token == null) {
