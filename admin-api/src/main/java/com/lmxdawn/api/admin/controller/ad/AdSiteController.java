@@ -11,6 +11,7 @@ import com.lmxdawn.api.admin.vo.PageSimpleVO;
 import com.lmxdawn.api.admin.vo.ResultVO;
 import com.lmxdawn.api.admin.vo.ad.AdSimpleVo;
 import com.lmxdawn.api.admin.vo.ad.AdSiteVo;
+import com.lmxdawn.api.common.converter.LongList2StringConverter;
 import com.lmxdawn.api.common.converter.String2LongListConverter;
 import com.lmxdawn.api.common.utils.ResultVOUtils;
 import com.sun.deploy.util.StringUtils;
@@ -84,10 +85,15 @@ public class AdSiteController {
      * 获取广告列表
      */
     @AuthRuleAnnotation("admin/ad/site/adList")
-    @GetMapping("/admin/ad/site/adList")
-    public ResultVO adList(@RequestParam(value = "adIds", defaultValue = "") List<Long> adIds) {
+    @PostMapping("/admin/ad/site/adList")
+    public ResultVO adList(@RequestBody Long[] adIds) {
 
-        List<AdSimpleVo> adSimpleVoList = adSiteService.listAdminByAdIdsIn(adIds);
+        List<Long> adIdList = new ArrayList<>();
+        if (adIds.length > 0) {
+            adIdList = Arrays.asList(adIds);
+        }
+
+        List<AdSimpleVo> adSimpleVoList = adSiteService.listAdminByAdIdsIn(adIdList);
 
         PageSimpleVO<AdSimpleVo> pageSimpleVO = new PageSimpleVO<>();
         pageSimpleVO.setTotal(1L);
@@ -113,11 +119,7 @@ public class AdSiteController {
 
         AdSite adSite = new AdSite();
         BeanUtils.copyProperties(adSiteSaveForm, adSite);
-
-        if (null != adSiteSaveForm.getAdIds()) {
-            adSite.setAdIds(StringUtils.join(adSiteSaveForm.getAdIds(), ","));
-        }
-
+        adSite.setAdIds(LongList2StringConverter.convert(adSiteSaveForm.getAdIds(), ","));
         Date nowDate = new Date();
         adSite.setCreateTime(nowDate);
         adSite.setModifiedTime(nowDate);
@@ -148,14 +150,9 @@ public class AdSiteController {
 
         AdSite adSite = new AdSite();
         BeanUtils.copyProperties(adSiteSaveForm, adSite);
-
-        if (null != adSiteSaveForm.getAdIds()) {
-            adSite.setAdIds(StringUtils.join(adSiteSaveForm.getAdIds(), ","));
-        }
-
+        adSite.setAdIds(LongList2StringConverter.convert(adSiteSaveForm.getAdIds(), ","));
         Date nowDate = new Date();
         adSite.setModifiedTime(nowDate);
-
         boolean b = adSiteService.updateAdSite(adSite);
         if (!b) {
             return ResultVOUtils.error(ResultEnum.NOT_NETWORK);

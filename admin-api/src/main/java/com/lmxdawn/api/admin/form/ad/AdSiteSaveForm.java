@@ -22,9 +22,5 @@ public class AdSiteSaveForm {
     private List<Long> adIds;
     private Date createTime;
     private Date modifiedTime;
-    @NotNull(message = "请选择状态")
-    @Min(value = 0, message = "参数错误")
-    @Max(value = 1, message = "参数错误")
-    private Integer status;
 
 }

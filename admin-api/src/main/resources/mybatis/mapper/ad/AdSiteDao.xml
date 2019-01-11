@@ -15,8 +15,8 @@
         DESC
     </select>
 
-    <insert id="insertAd" keyProperty="siteId" parameterType="com.lmxdawn.api.admin.entity.ad.AdSite">
-        INSERT INTO ad_site(site_name,`describe`,ad_ids,`status`,create_time,modified_time)
+    <insert id="insertAdSite" keyProperty="siteId" parameterType="com.lmxdawn.api.admin.entity.ad.AdSite">
+        INSERT INTO ad_site(site_name,`describe`,ad_ids,create_time,modified_time)
         values
         (#{siteName},
         <choose>
@@ -35,25 +35,23 @@
                 '',
             </otherwise>
         </choose>
-        #{status},
         #{createTime},
         #{modifiedTime})
     </insert>
 
-    <update id="updateAd" parameterType="com.lmxdawn.api.admin.entity.ad.AdSite">
-        UPDATE ad
+    <update id="updateAdSite" parameterType="com.lmxdawn.api.admin.entity.ad.AdSite">
+        UPDATE ad_site
         <set>
             <if test="siteName != null">site_name=#{siteName},</if>
             <if test="describe != null">`describe`=#{describe},</if>
             <if test="adIds != null">ad_ids=#{adIds},</if>
-            <if test="status != null">status=#{status},</if>
             modified_time=#{modifiedTime}
         </set>
         WHERE site_id=#{siteId}
     </update>
 
     <delete id="deleteById" parameterType="java.lang.Long">
-        delete from ad where site_id = #{siteId}
+        delete from ad_site where site_id = #{siteId}
     </delete>
 
 
