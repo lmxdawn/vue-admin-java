@@ -46,8 +46,6 @@ public class AdController {
 
         List<Ad> adList = adService.listAdminPage(adQueryForm);
 
-        System.out.println(String2StringListConverter.convert("ss", ","));
-
         List<AdVo> adVoList = adList.stream().map(item -> {
             AdVo adVo = new AdVo();
             BeanUtils.copyProperties(item, adVo);
@@ -93,7 +91,6 @@ public class AdController {
         ad.setCreateTime(nowDate);
         ad.setModifiedTime(nowDate);
 
-        System.out.println(ad);
         boolean b = adService.insertAd(ad);
         if (!b) {
             return ResultVOUtils.error(ResultEnum.NOT_NETWORK);
@@ -131,7 +128,6 @@ public class AdController {
         Date nowDate = new Date();
         ad.setModifiedTime(nowDate);
 
-        System.out.println(ad);
         boolean b = adService.updateAd(ad);
 
         if (!b) {

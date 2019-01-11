@@ -75,7 +75,6 @@ public class AuthPermissionRuleServiceImpl implements AuthPermissionRuleService 
         if (authPermissionRule.getListorder() == null) {
             authPermissionRule.setListorder(999);
         }
-        System.out.println(authPermissionRule);
         return authPermissionRuleDao.insertAuthPermissionRule(authPermissionRule);
     }
 
