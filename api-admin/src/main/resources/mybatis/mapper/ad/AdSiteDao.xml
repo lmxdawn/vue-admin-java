@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.api.admin.dao.ad.AdSiteDao">
+
+    <select id="listAdmin" parameterType="com.lmxdawn.api.admin.req.ad.AdSiteQueryRequest" resultType="com.lmxdawn.api.admin.entity.ad.AdSite">
+        SELECT site_id,site_name,`describe`,ad_ids,modified_time
+        FROM ad_site
+        <where>
+            <if test="siteId != null and siteId != 0">
+                AND site_id = #{siteId}
+            </if>
+        </where>
+        ORDER BY site_id
+        DESC
+    </select>
+
+    <insert id="insertAdSite" keyProperty="siteId" parameterType="com.lmxdawn.api.admin.entity.ad.AdSite">
+        INSERT INTO ad_site(site_name,`describe`,ad_ids,create_time,modified_time)
+        values
+        (#{siteName},
+        <choose>
+            <when test="describe != null">
+                #{describe},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="adIds != null">
+                #{adIds},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+        #{createTime},
+        #{modifiedTime})
+    </insert>
+
+    <update id="updateAdSite" parameterType="com.lmxdawn.api.admin.entity.ad.AdSite">
+        UPDATE ad_site
+        <set>
+            <if test="siteName != null">site_name=#{siteName},</if>
+            <if test="describe != null">`describe`=#{describe},</if>
+            <if test="adIds != null">ad_ids=#{adIds},</if>
+            modified_time=#{modifiedTime}
+        </set>
+        WHERE site_id=#{siteId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from ad_site where site_id = #{siteId}
+    </delete>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.api.admin.dao.ad.AdDao">
+
+    <select id="listAdmin" parameterType="com.lmxdawn.api.admin.req.ad.AdQueryRequest" resultType="com.lmxdawn.api.admin.entity.ad.Ad">
+        SELECT ad_id,`title`,`describe`,pic,jump_type,jump_url,ios_url,android_url,wxa_appid,channel_type,channel_list,android_version_type,android_version_list,ios_version_type,ios_version_list,new_show_start_num,new_show_max_num,old_show_start_num,old_show_max_num,start_time,end_time,event_name,status
+        FROM ad
+        <where>
+            <if test="title != null and title != ''">
+                `title` = #{title}
+            </if>
+        </where>
+        ORDER BY ad_id
+        DESC
+    </select>
+
+    <select id="listAdminByAdIdsIn" resultType="com.lmxdawn.api.admin.entity.ad.Ad">
+        SELECT ad_id,title,`describe`,status
+        FROM ad
+        where ad_id in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        LIMIT 150
+    </select>
+
+    <insert id="insertAd" keyProperty="adId" parameterType="com.lmxdawn.api.admin.entity.ad.Ad">
+        INSERT INTO ad(title,`describe`,pic,jump_type,jump_url,ios_url,android_url,wxa_appid,channel_type,channel_list,android_version_type,android_version_list,ios_version_type,ios_version_list,new_show_start_num,new_show_max_num,old_show_start_num,old_show_max_num,start_time,end_time,event_name,`status`,create_time,modified_time)
+        values
+        (#{title},
+        <choose>
+            <when test="describe != null">
+                #{describe},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+        #{pic},
+        #{jumpType},
+        <choose>
+            <when test="jumpUrl != null">
+                #{jumpUrl},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="iosUrl != null">
+                #{iosUrl},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="androidUrl != null">
+                #{androidUrl},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="wxaAppid != null">
+                #{wxaAppid},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+
+        <choose>
+            <when test="channelType != null">
+                #{channelType},
+            </when>
+            <otherwise>
+                0,
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="channelList != null">
+                #{channelList},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="androidVersionType != null">
+                #{androidVersionType},
+            </when>
+            <otherwise>
+                0,
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="androidVersionList != null">
+                #{androidVersionList},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="iosVersionType != null">
+                #{iosVersionType},
+            </when>
+            <otherwise>
+                0,
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="iosVersionList != null">
+                #{iosVersionList},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+
+        <choose>
+            <when test="newShowStartNum != null">
+                #{newShowStartNum},
+            </when>
+            <otherwise>
+                0,
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="newShowMaxNum != null">
+                #{newShowStartNum},
+            </when>
+            <otherwise>
+                0,
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="oldShowStartNum != null">
+                #{oldShowStartNum},
+            </when>
+            <otherwise>
+                0,
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="oldShowMaxNum != null">
+                #{oldShowStartNum},
+            </when>
+            <otherwise>
+                0,
+            </otherwise>
+        </choose>
+        #{startTime},
+        #{endTime},
+        <choose>
+            <when test="eventName != null">
+                #{eventName},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+        #{status},
+        #{createTime},
+        #{modifiedTime})
+    </insert>
+
+    <update id="updateAd" parameterType="com.lmxdawn.api.admin.entity.ad.Ad">
+        UPDATE ad
+        <set>
+            <if test="title != null">`title`=#{title},</if>
+            <if test="describe != null">`describe`=#{describe},</if>
+            <if test="pic != null">pic=#{pic},</if>
+            <if test="jumpType != null">jump_type=#{jumpType},</if>
+            <if test="jumpUrl != null">jump_url=#{jumpUrl},</if>
+            <if test="iosUrl != null">ios_url=#{iosUrl},</if>
+            <if test="androidUrl != null">android_url=#{androidUrl},</if>
+            <if test="wxaAppid != null">wxa_appid=#{wxaAppid},</if>
+            <if test="channelType != null">channel_type=#{channelType},</if>
+            <if test="channelList != null">channel_list=#{channelList},</if>
+            <if test="androidVersionType != null">android_version_type=#{androidVersionType},</if>
+            <if test="androidVersionList != null">android_version_list=#{androidVersionList},</if>
+            <if test="iosVersionType != null">ios_version_type=#{iosVersionType},</if>
+            <if test="iosVersionList != null">ios_version_list=#{iosVersionList},</if>
+            <if test="newShowStartNum != null">new_show_start_num=#{newShowStartNum},</if>
+            <if test="newShowMaxNum != null">new_show_max_num=#{newShowMaxNum},</if>
+            <if test="oldShowStartNum != null">old_show_start_num=#{oldShowStartNum},</if>
+            <if test="oldShowMaxNum != null">old_show_max_num=#{oldShowMaxNum},</if>
+            <if test="startTime != null">start_time=#{startTime},</if>
+            <if test="endTime != null">end_time=#{endTime},</if>
+            <if test="eventName != null">event_name=#{eventName},</if>
+            <if test="status != null">status=#{status},</if>
+            modified_time=#{modifiedTime}
+        </set>
+        WHERE ad_id=#{adId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from ad where ad_id = #{adId}
+    </delete>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

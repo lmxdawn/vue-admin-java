@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.api.admin.dao.auth.AuthAdminDao">
+
+    <select id="listAdminPage" parameterType="com.lmxdawn.api.admin.req.auth.AuthAdminQueryRequest" resultType="com.lmxdawn.api.admin.entity.auth.AuthAdmin">
+        SELECT id,username,avatar,tel,email,status,last_login_ip,last_login_time,create_time
+        FROM auth_admin
+        <where>
+            <if test="ids != null and ids.size > 0">
+                AND id IN
+                <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="username != null and '' != username">
+                AND username LIKE CONCAT(#{username},'%')
+            </if>
+        </where>
+        ORDER BY id
+        DESC
+    </select>
+
+    <select id="findByUserName" parameterType="hashmap" resultType="com.lmxdawn.api.admin.entity.auth.AuthAdmin">
+        SELECT id,password
+        FROM auth_admin
+        <where>
+            username = #{username}
+        </where>
+        LIMIT 1
+    </select>
+
+    <select id="findById" parameterType="hashmap" resultType="com.lmxdawn.api.admin.entity.auth.AuthAdmin">
+        SELECT id,username,avatar
+        FROM auth_admin
+        <where>
+            id = #{id}
+        </where>
+        LIMIT 1
+    </select>
+
+    <select id="findPwdById" parameterType="hashmap" resultType="com.lmxdawn.api.admin.entity.auth.AuthAdmin">
+        SELECT password
+        FROM auth_admin
+        <where>
+            id = #{id}
+        </where>
+        LIMIT 1
+    </select>
+
+    <insert id="insertAuthAdmin" keyProperty="id" parameterType="com.lmxdawn.api.admin.entity.auth.AuthAdmin">
+        INSERT INTO auth_admin(username,password,tel,email,avatar,sex,last_login_ip,last_login_time,create_time,status)
+        values
+        (#{username},
+        <choose>
+            <when test="password != null">
+                #{password},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="tel != null">
+                #{tel},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="email != null">
+                #{email},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="avatar != null">
+                #{avatar},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="sex != null">
+                #{sex},
+            </when>
+            <otherwise>
+                0,
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="lastLoginIp != null">
+                #{lastLoginIp},
+            </when>
+            <otherwise>
+                '',
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="lastLoginTime != null">
+                #{lastLoginTime},
+            </when>
+            <otherwise>
+                '0001-01-01 00:00:00',
+            </otherwise>
+        </choose>
+        #{createTime},
+        #{status,jdbcType=INTEGER})
+    </insert>
+
+    <update id="updateAuthAdmin" parameterType="com.lmxdawn.api.admin.entity.auth.AuthAdmin">
+        UPDATE auth_admin
+        <set>
+            <if test="username != null">username=#{username},</if>
+            <if test="avatar != null">avatar=#{avatar},</if>
+            <if test="password != null">password=#{password},</if>
+            <if test="lastLoginIp != null">last_login_ip=#{lastLoginIp},</if>
+            <if test="lastLoginTime != null">last_login_time=#{lastLoginTime}</if>
+            <if test="status != null">status=#{status}</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from auth_admin where id = #{id}
+    </delete>
+
+</mapper>
