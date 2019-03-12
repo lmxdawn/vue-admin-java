@@ -13,13 +13,13 @@
     </select>
 
     <select id="listByPid" resultType="com.lmxdawn.api.admin.entity.auth.AuthPermissionRule">
-        SELECT `id`,`pid`,`is_leaf`,`name`,`title`,`status`,`condition`,`listorder`
+        SELECT `id`,`pid`,`name`,`title`,`status`,`condition`,`listorder`
         FROM auth_permission_rule
         where pid = #{pid}
     </select>
 
     <select id="listAll" resultType="com.lmxdawn.api.admin.entity.auth.AuthPermissionRule">
-        SELECT `id`,`pid`,`is_leaf`,`name`,`title`,`status`,`condition`,`listorder`
+        SELECT `id`,`pid`,`name`,`title`,`status`,`condition`,`listorder`
         FROM auth_permission_rule
     </select>
 

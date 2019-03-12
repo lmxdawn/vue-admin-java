@@ -12,7 +12,6 @@ public class AuthPermissionRule {
 
   private Long id;
   private Long pid;
-  private Integer isLeaf;
   private String name;
   private String title;
   private Integer status;
