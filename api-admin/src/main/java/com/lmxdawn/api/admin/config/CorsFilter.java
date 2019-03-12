@@ -1,4 +1,4 @@
-package com.lmxdawn.api.admin.filter;
+package com.lmxdawn.api.admin.config;
 
 import com.lmxdawn.api.admin.config.CorsConfig;
 import org.springframework.beans.factory.annotation.Autowired;
