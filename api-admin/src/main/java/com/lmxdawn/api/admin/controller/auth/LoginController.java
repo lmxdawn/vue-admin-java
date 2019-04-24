@@ -129,14 +129,15 @@ public class LoginController {
         if (authAdmin == null) {
             throw new JsonException(ResultEnum.DATA_NOT);
         }
-        String newPwd = PasswordUtils.authAdminPwd(updatePasswordRequest.getOldPassword());
+        String oldPwd = PasswordUtils.authAdminPwd(updatePasswordRequest.getOldPassword());
         // 旧密码不对
         if (authAdmin.getPassword() != null
-                && !authAdmin.getPassword().equals(newPwd)) {
+                && !authAdmin.getPassword().equals(oldPwd)) {
             throw new JsonException(ResultEnum.DATA_NOT, "旧密码匹配失败");
         }
 
         AuthAdmin authAdminUp = new AuthAdmin();
+        String newPwd = PasswordUtils.authAdminPwd(updatePasswordRequest.getNewPassword());
         authAdminUp.setPassword(newPwd);
 
         boolean b = authAdminService.updateAuthAdmin(authAdminUp);
