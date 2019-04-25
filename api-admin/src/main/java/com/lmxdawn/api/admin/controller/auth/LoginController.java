@@ -137,6 +137,7 @@ public class LoginController {
         }
 
         AuthAdmin authAdminUp = new AuthAdmin();
+        authAdminUp.setId(authAdmin.getId());
         String newPwd = PasswordUtils.authAdminPwd(updatePasswordRequest.getNewPassword());
         authAdminUp.setPassword(newPwd);
 
