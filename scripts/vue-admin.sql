@@ -21,25 +21,32 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `ad`;
 CREATE TABLE `ad` (
   `ad_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '广告ID',
-  `title` varchar(255) DEFAULT NULL COMMENT '广告标题',
-  `describe` varchar(255) DEFAULT NULL COMMENT '描述',
-  `jump_type` tinyint(4) DEFAULT '0' COMMENT '跳转方式（1：小程序，2：url链接）',
-  `link_url` varchar(255) DEFAULT NULL COMMENT '跳转类型为 2 时有效',
-  `pic` varchar(255) DEFAULT NULL COMMENT '图片的地址',
-  `wxa_appid` varchar(50) DEFAULT NULL COMMENT '微信小程序的APPID（跳转类型为 1 时有效）',
-  `wxa_path` varchar(255) DEFAULT NULL COMMENT '跳转小程序的路径（跳转类型为 1 时有效）',
-  `extra_data` varchar(255) DEFAULT NULL COMMENT '跳转到小程序时的参数（跳转类型为 1 时有效）',
-  `env_version` varchar(10) DEFAULT NULL COMMENT '跳转的小程序版本（跳转类型为 1 时有效）',
-  `status` tinyint(4) DEFAULT '0' COMMENT '广告状态（0：禁用，1：正常）',
-  `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `title` varchar(255) NOT NULL COMMENT '广告标题',
+  `describe` varchar(255) NOT NULL DEFAULT '' COMMENT '描述',
+  `pic` varchar(255) NOT NULL DEFAULT '' COMMENT '图片的地址',
+  `jump_type` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '跳转方式（0，web 页面，1：APP内链接，2：小程序）',
+  `jump_url` varchar(255) NOT NULL DEFAULT '' COMMENT '跳转的url路径',
+  `ios_url` varchar(255) NOT NULL DEFAULT '' COMMENT 'ios 的类名',
+  `android_url` varchar(255) NOT NULL DEFAULT '' COMMENT 'android 的类名',
+  `wxa_appid` varchar(50) NOT NULL DEFAULT '' COMMENT '微信小程序的APPID（跳转类型为 1 时有效）',
+  `channel_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '渠道名单类型（0：不做处理，1：白名单，2：黑名单）',
+  `channel_list` varchar(255) NOT NULL DEFAULT '' COMMENT '渠道黑名单',
+  `android_version_type` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'android 版本名单类型（0：不做处理，1：白名单，2：黑名单）',
+  `android_version_list` varchar(255) NOT NULL DEFAULT '' COMMENT 'android 版本黑名单',
+  `ios_version_type` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'ios 版本名单类型（0：不做处理，1：白名单，2：黑名单）',
+  `ios_version_list` varchar(255) NOT NULL DEFAULT '' COMMENT 'ios 版本黑名单',
+  `new_show_start_num` int(11) NOT NULL DEFAULT '0' COMMENT '新用户从第几次开始展示',
+  `new_show_max_num` int(11) NOT NULL DEFAULT '0' COMMENT '新用户最大展示几次',
+  `old_show_start_num` int(11) NOT NULL DEFAULT '0' COMMENT '老用户第几次开始展示',
+  `old_show_max_num` int(11) NOT NULL DEFAULT '0' COMMENT '老用户最大展示几次',
+  `start_time` datetime DEFAULT NULL COMMENT '开始时间',
+  `end_time` datetime DEFAULT NULL COMMENT '结束时间',
+  `event_name` varchar(255) NOT NULL DEFAULT '' COMMENT '统计事件名称',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '广告状态（0：禁用，1：正常）',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `modified_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`ad_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='广告表';
-
--- ----------------------------
--- Records of ad
--- ----------------------------
-INSERT INTO `ad` VALUES ('1', 'css', '拉德芳斯就考虑到发动机爱上了房间里睡大觉飞拉萨的机房', '1', 'sss', 'resources/image/20180529/6f14f7a1f0b2bfdd49e3f47122a40160.png', '0', 'sss', '0', '0', '1', null, '2018-07-06 17:19:00');
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='广告表';
 
 -- ----------------------------
 -- Table structure for ad_site
@@ -47,18 +54,13 @@ INSERT INTO `ad` VALUES ('1', 'css', '拉德芳斯就考虑到发动机爱上了
 DROP TABLE IF EXISTS `ad_site`;
 CREATE TABLE `ad_site` (
   `site_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '广告位id',
-  `site_name` varchar(255) DEFAULT NULL COMMENT '广告位名称',
-  `describe` varchar(255) DEFAULT NULL COMMENT '广告位描述',
-  `ad_ids` varchar(255) DEFAULT NULL COMMENT '广告位的广告id（多个用 , 号隔开）',
-  `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `site_name` varchar(255) NOT NULL COMMENT '广告位名称',
+  `describe` varchar(255) NOT NULL DEFAULT '' COMMENT '广告位描述',
+  `ad_ids` varchar(255) NOT NULL DEFAULT '' COMMENT '广告位的广告id（用 , 隔开）',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `modified_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`site_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='广告位';
-
--- ----------------------------
--- Records of ad_site
--- ----------------------------
-INSERT INTO `ad_site` VALUES ('1', 'fff', 'fffgggggggghhh1111', '0', '2018-08-23 11:06:54', '2018-08-23 11:07:45');
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='广告位';
 
 -- ----------------------------
 -- Table structure for auth_admin
