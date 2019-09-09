@@ -3,7 +3,7 @@ package com.lmxdawn.api.admin.converter;
 
 import com.lmxdawn.api.admin.entity.ad.Ad;
 import com.lmxdawn.api.admin.req.ad.AdSaveRequest;
-import com.sun.deploy.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
